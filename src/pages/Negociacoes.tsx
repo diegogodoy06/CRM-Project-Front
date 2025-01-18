@@ -14,6 +14,7 @@ import IconCalendar from '../components/Icon/IconCalendar';
 import IconEdit from '../components/Icon/IconEdit';
 import IconTrashLines from '../components/Icon/IconTrashLines';
 import IconX from '../components/Icon/IconX';
+import IconInfoCircle from '../components/Icon/IconInfoCircle';
 
 const Negociacoes = () => {
     const dispatch = useDispatch();
@@ -83,7 +84,7 @@ const Negociacoes = () => {
             tasks: [],
         },
     ]);
-    
+
     const changeValue = (e: any) => {
         const { value, id } = e.target;
         setParams({ ...params, [id]: value });
@@ -244,10 +245,15 @@ const Negociacoes = () => {
         setIsDeleteModal(false);
     };
 
+    const [isFilterModalOpen, setFilterModalOpen] = useState(false);
+
+    const toggleFilterModal = () => {
+        setFilterModalOpen(!isFilterModalOpen);
+    };
 
     return (
         <div>
-            <div className="flex justify-end">
+            <div className="flex justify-between items-center">
                 <button
                     type="button"
                     className="btn btn-primary flex"
@@ -258,45 +264,161 @@ const Negociacoes = () => {
                     <IconPlus className="w-5 h-5 ltr:mr-3 rtl:ml-3" />
                     Adicionar
                 </button>
+
+                {/* Botão de Filtragem */}
+                <button
+                    type="button"
+                    className="btn btn-secondary flex"
+                    onClick={toggleFilterModal}
+                >
+                    <IconCalendar className="w-5 h-5 ltr:mr-3 rtl:ml-3" />
+                    Filtrar
+                </button>
             </div>
 
-            <div className="flex justify">
+            <div className="flex justify"></div>
 
-            </div>
-            
-            {/* project list  */}
+            {/* Modal Lateral de Filtragem */}
+            {isFilterModalOpen && (
+                <div className="fixed inset-0 z-50 flex">
+                    <div
+                        className="bg-gray-800 bg-opacity-50 flex-1"
+                        onClick={toggleFilterModal}
+                    ></div>
+                    <div className="bg-white w-80 p-5 shadow-lg">
+                        <h2 className="text-lg font-semibold mb-4">Filtrar Cards</h2>
+                        <form>
+                            {/* Dono do Card */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Dono</label>
+                                <input
+                                    type="text"
+                                    className="input input-bordered w-full"
+                                    placeholder="Nome do dono"
+                                />
+                            </div>
+
+                            {/* Status */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Status</label>
+                                <select className="select select-bordered w-full">
+                                    <option value="">Selecione...</option>
+                                    <option value="ativo">Ativo</option>
+                                    <option value="inativo">Inativo</option>
+                                </select>
+                            </div>
+
+                            {/* Ordem */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Ordenar por</label>
+                                <select className="select select-bordered w-full">
+                                    <option value="">Selecione...</option>
+                                    <option value="a-z">A-Z</option>
+                                    <option value="z-a">Z-A</option>
+                                    <option value="recentes">Mais Recentes</option>
+                                    <option value="antigos">Mais Antigos</option>
+                                </select>
+                            </div>
+
+                            {/* Nome */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Nome</label>
+                                <input
+                                    type="text"
+                                    className="input input-bordered w-full"
+                                    placeholder="Nome do card"
+                                />
+                            </div>
+
+                            {/* Data de Criação */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Data de Criação</label>
+                                <input
+                                    type="date"
+                                    className="input input-bordered w-full"
+                                />
+                            </div>
+
+                            {/* Empresa */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Empresa</label>
+                                <input
+                                    type="text"
+                                    className="input input-bordered w-full"
+                                    placeholder="Nome da empresa"
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="btn btn-primary w-full"
+                            >
+                                Aplicar Filtros
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* project list */}
             <div className="relative pt-5">
                 <div className="perfect-scrollbar h-full -mx-2">
                     <div className="overflow-x-auto flex items-start flex-nowrap gap-5 pb-2 px-2">
                         {projectList.map((project: any) => {
                             return (
-                                <div key={project.id} className="panel w-80 flex-none" data-group={project.id}>
+                                <div
+                                    key={project.id}
+                                    className="panel w-80 flex-none"
+                                    data-group={project.id}
+                                >
                                     <div className="flex justify-between mb-5">
-                                        <h4 className="text-base font-semibold">{project.title}</h4>
+                                        <h4 className="text-base font-semibold">
+                                            {project.title}
+                                        </h4>
 
                                         <div className="flex items-center">
-                                            <button onClick={() => addEditTask(project.id)} type="button" className="hover:text-primary ltr:mr-2 rtl:ml-2">
+                                            <button
+                                                onClick={() => addEditTask(project.id)}
+                                                type="button"
+                                                className="hover:text-primary ltr:mr-2 rtl:ml-2"
+                                            >
                                                 <IconPlusCircle />
                                             </button>
                                             <div className="dropdown">
                                                 <Dropdown
                                                     offset={[0, 5]}
-                                                    
-                                                    button={<IconHorizontalDots className="opacity-70 hover:opacity-100" />}
+                                                    button={
+                                                        <IconHorizontalDots className="opacity-70 hover:opacity-100" />
+                                                    }
                                                 >
                                                     <ul>
                                                         <li>
-                                                            <button type="button" onClick={() => addEditProject(project)}>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    addEditProject(project)
+                                                                }
+                                                            >
                                                                 Edit
                                                             </button>
                                                         </li>
                                                         <li>
-                                                            <button type="button" onClick={() => deleteProject(project)}>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    deleteProject(project)
+                                                                }
+                                                            >
                                                                 Delete
                                                             </button>
                                                         </li>
                                                         <li>
-                                                            <button type="button" onClick={() => clearProjects(project)}>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() =>
+                                                                    clearProjects(project)
+                                                                }
+                                                            >
                                                                 Clear All
                                                             </button>
                                                         </li>
@@ -309,57 +431,116 @@ const Negociacoes = () => {
                                         list={project.tasks}
                                         setList={(newState, sortable) => {
                                             if (sortable) {
-                                                const groupId: any = sortable.el.closest('[data-group]')?.getAttribute('data-group') || 0;
-                                                const newList = projectList.map((task: any) => {
-                                                    if (parseInt(task.id) === parseInt(groupId)) {
-                                                        task.tasks = newState;
-                                                    }
+                                                const groupId: any =
+                                                    sortable.el
+                                                        .closest("[data-group]")
+                                                        ?.getAttribute("data-group") || 0;
+                                                const newList = projectList.map(
+                                                    (task: any) => {
+                                                        if (
+                                                            parseInt(task.id) ===
+                                                            parseInt(groupId)
+                                                        ) {
+                                                            task.tasks = newState;
+                                                        }
 
-                                                    return task;
-                                                });
+                                                        return task;
+                                                    }
+                                                );
                                                 setProjectList(newList);
                                             }
                                         }}
                                         animation={200}
-                                        group={{ name: 'shared', pull: true, put: true }}
+                                        group={{
+                                            name: "shared",
+                                            pull: true,
+                                            put: true,
+                                        }}
                                         ghostClass="sortable-ghost"
                                         dragClass="sortable-drag"
                                         className="connect-sorting-content min-h-[150px]"
                                     >
                                         {project.tasks.map((task: any) => {
                                             return (
-                                                <div className="sortable-list " key={project.id + '' + task.id}>
+                                                <div
+                                                    className="sortable-list "
+                                                    key={project.id + "" + task.id}
+                                                >
                                                     <div className="shadow bg-[#f4f4f4] dark:bg-white-dark/20 p-3 pb-5 rounded-md mb-5 space-y-3 cursor-move">
-                                                        {task.image ? <img src="/assets/images/carousel1.jpeg" alt="images" className="h-32 w-full object-cover rounded-md" /> : ''}
-                                                        <div className="text-base font-medium">{task.title}</div>
-                                                        <p className="break-all">{task.description}</p>
+                                                        {task.image ? (
+                                                            <img
+                                                                src="/assets/images/carousel1.jpeg"
+                                                                alt="images"
+                                                                className="h-32 w-full object-cover rounded-md"
+                                                            />
+                                                        ) : (
+                                                            ""
+                                                        )}
+                                                        <div className="text-base font-medium">
+                                                            {task.title}
+                                                        </div>
+                                                        <p className="break-all">
+                                                            {task.description}
+                                                        </p>
                                                         <div className="flex gap-2 items-center flex-wrap">
                                                             {task.tags?.length ? (
-                                                                task.tags.map((tag: any, i: any) => {
-                                                                    return (
-                                                                        <div key={i} className="btn px-2 py-1 flex btn-outline-primary">
-                                                                            <IconTag className="shrink-0" />
-                                                                            <span className="ltr:ml-2 rtl:mr-2">{tag}</span>
-                                                                        </div>
-                                                                    );
-                                                                })
+                                                                task.tags.map(
+                                                                    (
+                                                                        tag: any,
+                                                                        i: any
+                                                                    ) => {
+                                                                        return (
+                                                                            <div
+                                                                                key={i}
+                                                                                className="btn px-2 py-1 flex btn-outline-primary"
+                                                                            >
+                                                                                <IconTag className="shrink-0" />
+                                                                                <span className="ltr:ml-2 rtl:mr-2">
+                                                                                    {tag}
+                                                                                </span>
+                                                                            </div>
+                                                                        );
+                                                                    }
+                                                                )
                                                             ) : (
                                                                 <div className="btn px-2 py-1 flex text-white-dark dark:border-white-dark/50 shadow-none">
                                                                     <IconTag className="shrink-0" />
-                                                                    <span className="ltr:ml-2 rtl:mr-2">No Tags</span>
+                                                                    <span className="ltr:ml-2 rtl:mr-2">
+                                                                        No Tags
+                                                                    </span>
                                                                 </div>
                                                             )}
                                                         </div>
                                                         <div className="flex items-center justify-between">
                                                             <div className="font-medium flex items-center hover:text-primary">
                                                                 <IconCalendar className="ltr:mr-3 rtl:ml-3 shrink-0" />
-                                                                <span>{task.date}</span>
+                                                                <span>
+                                                                    {task.date}
+                                                                </span>
                                                             </div>
                                                             <div className="flex items-center">
-                                                                <button onClick={() => addEditTask(project.id, task)} type="button" className="hover:text-info">
+                                                                <button
+                                                                    onClick={() =>
+                                                                        addEditTask(
+                                                                            project.id,
+                                                                            task
+                                                                        )
+                                                                    }
+                                                                    type="button"
+                                                                    className="hover:text-info"
+                                                                >
                                                                     <IconEdit className="ltr:mr-3 rtl:ml-3" />
                                                                 </button>
-                                                                <button onClick={() => deleteConfirmModal(project.id, task)} type="button" className="hover:text-danger">
+                                                                <button
+                                                                    onClick={() =>
+                                                                        deleteConfirmModal(
+                                                                            project.id,
+                                                                            task
+                                                                        )
+                                                                    }
+                                                                    type="button"
+                                                                    className="hover:text-danger"
+                                                                >
                                                                     <IconTrashLines />
                                                                 </button>
                                                             </div>
@@ -370,7 +551,11 @@ const Negociacoes = () => {
                                         })}
                                     </ReactSortable>
                                     <div className="pt-3">
-                                        <button type="button" className="btn btn-primary mx-auto" onClick={() => addEditTask(project.id)}>
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary mx-auto"
+                                            onClick={() => addEditTask(project.id)}
+                                        >
                                             <IconPlus />
                                             Add Task
                                         </button>
@@ -542,7 +727,8 @@ const Negociacoes = () => {
                     </div>
                 </Dialog>
             </Transition>
-        </div>
+        </div >
     );
 };
+
 export default Negociacoes;
