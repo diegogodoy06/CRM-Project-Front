@@ -1,7 +1,6 @@
 import Dropdown from '../components/Dropdown';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReactSortable } from 'react-sortablejs';
-import { IRootState } from '../store';
 import { useState, Fragment, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import Swal from 'sweetalert2';
@@ -14,7 +13,12 @@ import IconCalendar from '../components/Icon/IconCalendar';
 import IconEdit from '../components/Icon/IconEdit';
 import IconTrashLines from '../components/Icon/IconTrashLines';
 import IconX from '../components/Icon/IconX';
-import IconInfoCircle from '../components/Icon/IconInfoCircle';
+import IconMessageDots from '../components/Icon/IconMessageDots';
+import IconMenuComponents from '../components/Icon/Menu/IconMenuComponents';
+import IconMenuTodo from '../components/Icon/Menu/IconMenuTodo';
+import IconListCheck from '../components/Icon/IconListCheck';
+import IconChecks from '../components/Icon/IconChecks';
+import IconFilter from '../components/Icon/IconFilter';
 
 const Negociacoes = () => {
     const dispatch = useDispatch();
@@ -247,36 +251,103 @@ const Negociacoes = () => {
 
     const [isFilterModalOpen, setFilterModalOpen] = useState(false);
 
+    const [viewMode, setViewMode] = useState("kambam"); // kambam or lista
+
     const toggleFilterModal = () => {
         setFilterModalOpen(!isFilterModalOpen);
     };
 
+    const handleViewModeChange = (mode: "kambam" | "lista") => {
+        setViewMode(mode);
+    };
+
+    const [activeFilters, setActiveFilters] = useState(0); // Track active filters
+
     return (
         <div>
-            <div className="flex justify-between items-center">
-                <button
-                    type="button"
-                    className="btn btn-primary flex"
-                    onClick={() => {
-                        addEditProject();
-                    }}
-                >
-                    <IconPlus className="w-5 h-5 ltr:mr-3 rtl:ml-3" />
-                    Adicionar
-                </button>
+            {/* First Row */}
+            <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center gap-2">
+                    <button
+                        type="button"
+                        className={`btn ${viewMode === "kambam" ? "btn-primary" : "btn-secondary"}`}
+                        onClick={() => handleViewModeChange("kambam")}
+                    >
+                        <IconChecks className="w-5 h-5" />
+                    </button>
+                    <button
+                        type="button"
+                        className={`btn ${viewMode === "lista" ? "btn-primary" : "btn-secondary"}`}
+                        onClick={() => handleViewModeChange("lista")}
+                    >
+                        <IconListCheck className="w-5 h-5" />
+                    </button>
+                </div>
 
-                {/* Botão de Filtragem */}
-                <button
-                    type="button"
-                    className="btn btn-secondary flex"
-                    onClick={toggleFilterModal}
-                >
-                    <IconCalendar className="w-5 h-5 ltr:mr-3 rtl:ml-3" />
-                    Filtrar
-                </button>
+                <div className="flex items-center gap-2">
+                    <button type="button" className="btn btn-secondary">
+                        <IconHorizontalDots className="w-5 h-5" />
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-primary flex"
+                        onClick={() => {
+                            addEditProject();
+                        }}
+                    >
+                        <IconPlus className="w-5 h-5 ltr:mr-3 rtl:ml-3" />
+                        Adicionar
+                    </button>
+                </div>
             </div>
 
-            <div className="flex justify"></div>
+            {/* Second Row */}
+            <div className="flex gap-4 items-center mb-4">
+
+                <div className="flex items-center gap-2 border p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium">Funil:</label>
+                    <select className="select select-bordered w-full">
+                        <option value="">Funil Padrão</option>
+                        <option value="categoria1">Categoria 1</option>
+                        <option value="categoria2">Categoria 2</option>
+                        <option value="categoria3">Categoria 3</option>
+                    </select>
+                </div>
+
+                <div className="flex items-center gap-2 border p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium">Dono:</label>
+                    <input type="text" className="input input-bordered w-full" placeholder="Nome do dono" />
+                </div>
+
+                <div className="flex items-center gap-2 border p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium">Status:</label>
+                    <select className="select select-bordered w-full">
+                        <option value="">Todos</option>
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                    </select>
+                </div>
+
+                <div className="flex items-center gap-2 border p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium">Ordem:</label>
+                    <select className="select select-bordered w-full">
+                        <option value="">Padrão</option>
+                        <option value="a-z">A-Z</option>
+                        <option value="z-a">Z-A</option>
+                        <option value="recentes">Mais Recentes</option>
+                        <option value="antigos">Mais Antigos</option>
+                    </select>
+                </div>
+
+                <button
+                    type="button"
+                    className="btn btn-secondary flex items-center"
+                    onClick={toggleFilterModal}
+                >
+                    <IconFilter className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
+                    Filtrar ({activeFilters})
+                </button>
+            </div>
 
             {/* Modal Lateral de Filtragem */}
             {isFilterModalOpen && (
@@ -727,7 +798,8 @@ const Negociacoes = () => {
                     </div>
                 </Dialog>
             </Transition>
-        </div >
+
+        </div>
     );
 };
 
