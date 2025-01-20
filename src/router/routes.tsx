@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-//const Index = lazy(() => import('../pages/Index'));
+const Index = lazy(() => import('../pages/Index'));
 const Analytics = lazy(() => import('../pages/Analytics'));
 const Finance = lazy(() => import('../pages/Finance'));
 const Crypto = lazy(() => import('../pages/Crypto'));
@@ -118,10 +118,10 @@ const routes = [
 
     {/*------------------------------------------------*/ },
 
-//    {
-//         path: '/index',
-//         element: <Index />,
-//     },
+    {
+         path: '/index',
+         element: <Index />,
+     },
     // analytics page
     {
         path: '/analytics',
