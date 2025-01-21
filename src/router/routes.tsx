@@ -1,5 +1,6 @@
+import path from 'path';
 import { lazy } from 'react';
-const Index = lazy(() => import('../pages/Index'));
+
 const Analytics = lazy(() => import('../pages/Analytics'));
 const Finance = lazy(() => import('../pages/Finance'));
 const Crypto = lazy(() => import('../pages/Crypto'));
@@ -103,6 +104,8 @@ const Clipboard = lazy(() => import('../pages/Forms/Clipboard'));
 {/*------------------------------------------------*/ }
 
 const Negociacoes = lazy(() => import('../pages/Negociacoes'));
+const Empresas = lazy(() => import('../pages/Empresas'));
+const Contatos = lazy(() => import('../pages/Contatos'));
 
 const routes = [
     // dashboard
@@ -114,14 +117,19 @@ const routes = [
         path: '/negociacoes',
         element: <Negociacoes />,
     },
+    {  
+        path: '/empresas',
+        element: <Empresas />,
+    },
+    {
+        path: '/contatos',
+        element: <Contatos />,
+    },
 
 
     {/*------------------------------------------------*/ },
 
-    {
-         path: '/index',
-         element: <Index />,
-     },
+
     // analytics page
     {
         path: '/analytics',

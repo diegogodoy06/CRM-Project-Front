@@ -343,7 +343,7 @@ const Header = () => {
                     </li>
 
                     <li className="menu nav-item relative">
-                        <NavLink to="">
+                        <NavLink to="/empresas">
                             <button type="button" className="nav-link">
                                 <div className="flex items-center">
                                     <span className="px-1">{t('Empresas')}</span>
@@ -353,7 +353,7 @@ const Header = () => {
                     </li>
 
                     <li className="menu nav-item relative">
-                        <NavLink to="">
+                        <NavLink to="/contatos">
                             <button type="button" className="nav-link">
                                 <div className="flex items-center">
                                     <span className="px-1">{t('Contatos')}</span>

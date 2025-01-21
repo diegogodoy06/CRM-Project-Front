@@ -1,9 +1,9 @@
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import sortBy from 'lodash/sortBy';
-import { setPageTitle } from '../../store/themeConfigSlice';
+import { setPageTitle } from '../store/themeConfigSlice';
 import { useDispatch } from 'react-redux';
-import IconBell from '../../components/Icon/IconBell';
+import IconBell from '../components/Icon/IconBell';
 
 const rowData = [
     {
@@ -91,18 +91,11 @@ const MultiColumn = () => {
 
     return (
         <div>
-            <div className="panel flex items-center overflow-x-auto whitespace-nowrap p-3 text-primary">
-                <div className="rounded-full bg-primary p-1.5 text-white ring-2 ring-primary/30 ltr:mr-3 rtl:ml-3">
-                    <IconBell />
-                </div>
-                <span className="ltr:mr-3 rtl:ml-3">Documentation: </span>
-                <a href="https://www.npmjs.com/package/mantine-datatable" target="_blank" className="block hover:underline">
-                    https://www.npmjs.com/package/mantine-datatable
-                </a>
-            </div>
-            <div className="panel mt-6">
+            <div className="panel mt-6"> {/* BUSCA E EXPORTAÇÃO */}
                 <div className="flex md:items-center md:flex-row flex-col mb-5 gap-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">Multicolumn</h5>
+ 
+
+
                     <div className="ltr:ml-auto rtl:mr-auto">
                         <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
                     </div>
