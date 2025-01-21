@@ -13,6 +13,13 @@ module.exports = {
     theme: {
         container: {
             center: true,
+            //screens: {
+            //sm: '640px', // Configurações para telas pequenas
+            //md: '768px', // Configurações para telas médias
+            //lg: '1024px', // Configurações para telas grandes
+            //xl: '1280px', // Configurações para telas extra grandes
+            //'2xl': '1536px', // Configurações para telas ainda maiores
+            //},
         },
         extend: {
             colors: {

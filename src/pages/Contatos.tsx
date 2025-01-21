@@ -108,7 +108,7 @@ const Contatos = () => {
     };
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="mx-auto p-4"> {/* add container caso queira que não fique em tela cheia */}
             {/* Filtros e Barra de Pesquisa */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-5 mb-6">
                 {/* Botões Importar e Criar Contato */}
