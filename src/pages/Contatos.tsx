@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { setPageTitle } from '../store/themeConfigSlice';
-import { Button, Group, Input, Select } from '@mantine/core';
+import { Button, Input, Select } from '@mantine/core';
 import sortBy from 'lodash/sortBy';
 
 const rowData = [
@@ -44,7 +44,7 @@ const Contatos = () => {
         columnAccessor: 'firstName',
         direction: 'asc',
     });
-    const [selectedCompany, setSelectedCompany] = useState<string | null>(''); // Corrigido aqui
+    const [selectedCompany, setSelectedCompany] = useState<string | null>('');
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
     const companies = [
@@ -110,9 +110,52 @@ const Contatos = () => {
     return (
         <div className="container mx-auto p-4">
             {/* Filtros e Barra de Pesquisa */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-5 mb-6">
+                {/* Botões Importar e Criar Contato */}
+                <div className="flex gap-2 justify-end items-center col-span-1 sm:col-span-2 lg:col-span-4">
+                    <Button variant="outline" onClick={handleImportClick}>
+                        Importar
+                    </Button>
+                    <Button className="btn btn-primary" onClick={handleCreateContact}>
+                        Criar Contato
+                    </Button>
+                </div>
+
                 {/* Filtro de Empresa */}
-                <div className="flex">
+                <div className="flex items-center">
+                    <Select
+                        className="w-full"
+                        value={selectedCompany}
+                        onChange={setSelectedCompany}
+                        placeholder="Todas as empresas"
+                        data={[
+                            { value: '', label: 'Todas as empresas' },
+                            ...companies.map((company) => ({
+                                value: company.id,
+                                label: company.name,
+                            })),
+                        ]}
+                    />
+                </div>
+
+                {/* Filtro de Empresa */}
+                <div className="flex items-center">
+                    <Select
+                        className="w-full"
+                        value={selectedCompany}
+                        onChange={setSelectedCompany}
+                        placeholder="Todas as empresas"
+                        data={[
+                            { value: '', label: 'Todas as empresas' },
+                            ...companies.map((company) => ({
+                                value: company.id,
+                                label: company.name,
+                            })),
+                        ]}
+                    />
+                </div>
+
+                <div className="flex items-center">
                     <Select
                         className="w-full"
                         value={selectedCompany}
@@ -129,121 +172,114 @@ const Contatos = () => {
                 </div>
 
                 {/* Campo de Pesquisa */}
-                <div className="flex">
+                <div className="flex gap-4 items-center">
                     <Input
-                        className=""
+                        className="flex-1"
                         placeholder="Pesquisar..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
-                </div>
-
-               {/* Botões Importar e Criar Contato */}
-               <div className="flex gap-2 mb-4">
-                    <Button className='btn btn-primary' onClick={handleImportClick}>Importar</Button>
-                    <Button className='btn btn-primary' onClick={handleCreateContact}>Criar Contato</Button>
                     <Button variant="outline" onClick={toggleFilterModal}>
                         Filtros Avançados
                     </Button>
                 </div>
 
-
- 
             </div>
 
             {/* Modal Lateral */}
-            {isFilterModalOpen && (
-                <div className="fixed inset-0 z-50 flex">
-                    {/* Fundo escurecido */}
-                    <div
-                        className="bg-gray-800 bg-opacity-50 flex-1"
-                        onClick={toggleFilterModal} // Fecha o modal ao clicar fora
-                    ></div>
+            {
+                isFilterModalOpen && (
+                    <div className="fixed inset-0 z-50 flex">
+                        {/* Fundo escurecido */}
+                        <div
+                            className="bg-gray-800 bg-opacity-50 flex-1"
+                            onClick={toggleFilterModal} // Fecha o modal ao clicar fora
+                        ></div>
 
-                    {/* Modal */}
-                    <div className="bg-white w-80 p-5 shadow-lg">
-                        <h2 className="text-lg font-semibold mb-4">Filtrar Cards</h2>
-                        <form>
-                            {/* Dono do Card */}
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Dono</label>
-                                <Input
-                                    type="text"
-                                    className="w-full"
-                                    placeholder="Nome do dono"
-                                />
-                            </div>
+                        {/* Modal */}
+                        <div className="bg-white w-80 p-5 shadow-lg">
+                            <h2 className="text-lg font-semibold mb-4">Filtrar Cards</h2>
+                            <form>
+                                {/* Dono do Card */}
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-2">Dono</label>
+                                    <Input
+                                        type="text"
+                                        className="w-full"
+                                        placeholder="Nome do dono"
+                                    />
+                                </div>
 
-                            {/* Status */}
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Status</label>
-                                <Select
-                                    className="w-full"
-                                    placeholder="Selecione..."
-                                    data={[
-                                        { value: 'ativo', label: 'Ativo' },
-                                        { value: 'inativo', label: 'Inativo' },
-                                    ]}
-                                />
-                            </div>
+                                {/* Status */}
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-2">Status</label>
+                                    <Select
+                                        className="w-full"
+                                        placeholder="Selecione..."
+                                        data={[
+                                            { value: 'ativo', label: 'Ativo' },
+                                            { value: 'inativo', label: 'Inativo' },
+                                        ]}
+                                    />
+                                </div>
 
-                            {/* Ordem */}
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Ordenar por</label>
-                                <Select
-                                    className="w-full"
-                                    placeholder="Selecione..."
-                                    data={[
-                                        { value: 'a-z', label: 'A-Z' },
-                                        { value: 'z-a', label: 'Z-A' },
-                                        { value: 'recentes', label: 'Mais Recentes' },
-                                        { value: 'antigos', label: 'Mais Antigos' },
-                                    ]}
-                                />
-                            </div>
+                                {/* Ordem */}
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-2">Ordenar por</label>
+                                    <Select
+                                        className="w-full"
+                                        placeholder="Selecione..."
+                                        data={[
+                                            { value: 'a-z', label: 'A-Z' },
+                                            { value: 'z-a', label: 'Z-A' },
+                                            { value: 'recentes', label: 'Mais Recentes' },
+                                            { value: 'antigos', label: 'Mais Antigos' },
+                                        ]}
+                                    />
+                                </div>
 
-                            {/* Nome */}
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Nome</label>
-                                <Input
-                                    type="text"
-                                    className="w-full"
-                                    placeholder="Nome do card"
-                                />
-                            </div>
+                                {/* Nome */}
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-2">Nome</label>
+                                    <Input
+                                        type="text"
+                                        className="w-full"
+                                        placeholder="Nome do card"
+                                    />
+                                </div>
 
-                            {/* Data de Criação */}
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Data de Criação</label>
-                                <Input
-                                    type="date"
-                                    className="w-full"
-                                />
-                            </div>
+                                {/* Data de Criação */}
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-2">Data de Criação</label>
+                                    <Input
+                                        type="date"
+                                        className="w-full"
+                                    />
+                                </div>
 
-                            {/* Empresa */}
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Empresa</label>
-                                <Input
-                                    type="text"
-                                    className="w-full"
-                                    placeholder="Nome da empresa"
-                                />
-                            </div>
+                                {/* Empresa */}
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-2">Empresa</label>
+                                    <Input
+                                        type="text"
+                                        className="w-full"
+                                        placeholder="Nome da empresa"
+                                    />
+                                </div>
 
-                            {/* Botão Aplicar Filtros */}
-                            <Button fullWidth variant="filled">
-                                Aplicar Filtros
-                            </Button>
-                        </form>
+                                {/* Botão Aplicar Filtros */}
+                                <Button className='btn btn-primary' fullWidth variant="filled">
+                                    Aplicar Filtros
+                                </Button>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            )}
-
+                )
+            }
 
 
             {/* Tabela */}
-            <div className="datatables">
+            <div className="panel datatables">
                 <DataTable
                     highlightOnHover
                     className="whitespace-nowrap table-hover"
@@ -274,7 +310,7 @@ const Contatos = () => {
                     paginationText={({ from, to, totalRecords }) => `Mostrando ${from} a ${to} de ${totalRecords} registros`}
                 />
             </div>
-        </div>
+        </div >
     );
 };
 
