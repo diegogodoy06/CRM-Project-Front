@@ -31,7 +31,7 @@ const rowData = [
 const Contatos = () => {
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Multi Column Table'));
+        dispatch(setPageTitle(''));
     }, [dispatch]);
 
     const [page, setPage] = useState(1);
