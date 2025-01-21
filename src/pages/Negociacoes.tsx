@@ -13,9 +13,6 @@ import IconCalendar from '../components/Icon/IconCalendar';
 import IconEdit from '../components/Icon/IconEdit';
 import IconTrashLines from '../components/Icon/IconTrashLines';
 import IconX from '../components/Icon/IconX';
-import IconMessageDots from '../components/Icon/IconMessageDots';
-import IconMenuComponents from '../components/Icon/Menu/IconMenuComponents';
-import IconMenuTodo from '../components/Icon/Menu/IconMenuTodo';
 import IconListCheck from '../components/Icon/IconListCheck';
 import IconChecks from '../components/Icon/IconChecks';
 import IconFilter from '../components/Icon/IconFilter';
@@ -262,6 +259,7 @@ const Negociacoes = () => {
     };
 
     const [activeFilters, setActiveFilters] = useState(0); // Track active filters
+
 
     return (
         <div>
@@ -691,7 +689,7 @@ const Negociacoes = () => {
                     </div>
                 </Dialog>
             </Transition>
-
+            
             {/* add task modal */}
             <Transition appear show={isAddTaskModal} as={Fragment}>
                 <Dialog as="div" open={isAddTaskModal} onClose={() => setIsAddTaskModal(false)} className="relative z-50">
