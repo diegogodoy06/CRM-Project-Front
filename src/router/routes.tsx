@@ -104,37 +104,41 @@ const Clipboard = lazy(() => import('../pages/Forms/Clipboard'));
 
 {/*------------------------------------------------*/ }
 
-const NegociacoesQuadro = lazy(() => import('../pages/Negociacoes/Quadro'));
-const NegociacoesLista = lazy(() => import('../pages/Negociacoes/List'));
+const NegociacoesBoard = lazy(() => import('../pages/Negociacoes/NegociacoesBoard'));
+const NegociacoesList = lazy(() => import('../pages/Negociacoes/NegociacoesList'));
 
-const Empresas = lazy(() => import('../pages/Empresas'));
-const Contatos = lazy(() => import('../pages/Contatos'));
+const EmpresasList = lazy(() => import('../pages/Empresas/EmpresasList'));
+const ContatosList = lazy(() => import('../pages/Contatos/ContatosList'));
 const Login = lazy(() => import('../pages/Auth/Login'));
 
 const routes = [
     // dashboard
     {
         path: '/',
-        element: <NegociacoesQuadro />,
+        element: <NegociacoesBoard />,
     },
     {
         path: '/neg/board',
-        element: <NegociacoesQuadro />,
+        element: <NegociacoesBoard />,
     },
     {
         path: '/neg/list',
-        element: <NegociacoesLista />,
+        element: <NegociacoesList />,
     },
 
 
     {  
-        path: '/empresas',
-        element: <Empresas />,
+        path: '/comp/list',
+        element: <EmpresasList />,
     },
+
+
     {
-        path: '/contatos',
-        element: <Contatos />,
+        path: '/cont/list',
+        element: <ContatosList />,
     },
+
+
     {
         path: '/auth/login',
         Element : <Login />,

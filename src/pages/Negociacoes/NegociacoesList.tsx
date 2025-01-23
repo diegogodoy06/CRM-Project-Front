@@ -27,7 +27,7 @@ import IconRestore from '../../components/Icon/IconRestore';
 import { useNavigate } from "react-router-dom";
 import IconChecks from '../../components/Icon/IconChecks';
 import IconFilter from '../../components/Icon/IconFilter';
-import Negociacoes from './Quadro';
+import Negociacoes from './NegociacoesBoard';
 
 const NegociacoesList = () => {
     const navigate = useNavigate();

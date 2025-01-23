@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
-import { setPageTitle } from '../store/themeConfigSlice';
+import { setPageTitle } from '../../store/themeConfigSlice';
 import { Button, Input, Select } from '@mantine/core';
 import sortBy from 'lodash/sortBy';
+import IconFilter from '../../components/Icon/IconFilter';
 
 const rowData = [
     {
@@ -26,7 +27,7 @@ const rowData = [
     },
 ];
 
-const Empresas = () => {
+const EmpresasList = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle('Empresas'));
@@ -93,12 +94,15 @@ const Empresas = () => {
         return '';
     };
 
+    const [activeFilters, setActiveFilters] = useState(0);
+
     return (
-        <div className="mx-auto p-4">
+        <div>
             {/* Filtros e Barra de Pesquisa */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-5 mb-6">
+            <div className="flex justify-between items-center mb-4">
+
                 {/* Botões Importar e Criar Empresa */}
-                <div className="flex gap-2 justify-end items-center col-span-1 sm:col-span-2 lg:col-span-4">
+                <div className="flex items-center gap-2 ml-auto">
                     <Button variant="outline" onClick={handleImportClick}>
                         Importar
                     </Button>
@@ -106,65 +110,94 @@ const Empresas = () => {
                         Criar Empresa
                     </Button>
                 </div>
-
-                {/* Filtro de Status */}
-                <div className="flex items-center">
-                    <Select
-                        className="w-full"
-                        value={statusFilter}
-                        onChange={setStatusFilter}
-                        placeholder="Status"
-                        data={[
-                            { value: '', label: 'Todos os status' },
-                            { value: 'ativo', label: 'Ativo' },
-                            { value: 'inativo', label: 'Inativo' },
-                        ]}
-                    />
-                </div>
-
-                {/* Campo de Pesquisa */}
-                <div className="flex gap-4 items-center">
-                    <Input
-                        className="flex-1"
-                        placeholder="Pesquisar por nome, CNPJ ou telefone..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                    <Button variant="outline" onClick={toggleFilterModal}>
-                        Filtros Avançados
-                    </Button>
-                </div>
             </div>
 
-            {/* Modal Lateral */}
-            {isFilterModalOpen && (
-                <div className="fixed inset-0 z-50 flex">
-                    <div
-                        className="bg-gray-800 bg-opacity-50 flex-1"
-                        onClick={toggleFilterModal}
-                    ></div>
-                    <div className="bg-white w-80 p-5 shadow-lg">
-                        <h2 className="text-lg font-semibold mb-4">Filtros Avançados</h2>
-                        <form>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">CNPJ</label>
-                                <Input type="text" className="w-full" placeholder="Digite o CNPJ" />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Nome da Empresa</label>
-                                <Input type="text" className="w-full" placeholder="Digite o nome" />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium mb-2">Telefone</label>
-                                <Input type="text" className="w-full" placeholder="Telefone" />
-                            </div>
-                            <Button className="btn btn-primary" fullWidth variant="filled">
-                                Aplicar Filtros
-                            </Button>
-                        </form>
-                    </div>
+            <div className="flex gap-4 items-center px-4 border mb-4">
+
+                <div className="flex items-center gap-2 p-1 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: "0px" }}>
+                        Funil:
+                    </label>
+                    <select className="form-select text-white-dark">
+                        <option value="">Funil Padrão</option>
+                        <option value="categoria1">Categoria 1</option>
+                        <option value="categoria2">Categoria 2</option>
+                        <option value="categoria3">Categoria 3</option>
+                    </select>
                 </div>
-            )}
+
+                <div className="flex items-center gap-2 p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: "0px" }}>Responsável:</label>
+                    <select className="form-select text-white-dark">
+                        <option value="">Diego Alexandre</option>
+                        <option value="categoria1">Categoria 1</option>
+                        <option value="categoria2">Categoria 2</option>
+                        <option value="categoria3">Categoria 3</option>
+                    </select>
+                </div>
+
+                <div className="flex items-center gap-2 p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: "0px" }}>Status:</label>
+                    <select className="form-select text-white-dark">
+                        <option value="">Todos</option>
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                    </select>
+                </div>
+
+                <div className="flex items-center gap-2 p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: "0px" }}>Ordem:</label>
+                    <select className="form-select text-white-dark">
+                        <option value="">Padrão</option>
+                        <option value="a-z">A-Z</option>
+                        <option value="z-a">Z-A</option>
+                        <option value="recentes">Mais Recentes</option>
+                        <option value="antigos">Mais Antigos</option>
+                    </select>
+                </div>
+
+                <button
+                    type="button"
+                    className="btn btn-primary flex items-center"
+                    onClick={toggleFilterModal}
+                >
+                    <IconFilter className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
+                    Filtrar ({activeFilters})
+                </button>
+            </div>
+
+
+            {/* Modal Lateral */}
+            {
+                isFilterModalOpen && (
+                    <div className="fixed inset-0 z-50 flex">
+                        <div
+                            className="bg-gray-800 bg-opacity-50 flex-1"
+                            onClick={toggleFilterModal}
+                        ></div>
+                        <div className="bg-white w-80 p-5 shadow-lg">
+                            <h2 className="text-lg font-semibold mb-4">Filtros Avançados</h2>
+                            <form>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-2">CNPJ</label>
+                                    <Input type="text" className="w-full" placeholder="Digite o CNPJ" />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-2">Nome da Empresa</label>
+                                    <Input type="text" className="w-full" placeholder="Digite o nome" />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-2">Telefone</label>
+                                    <Input type="text" className="w-full" placeholder="Telefone" />
+                                </div>
+                                <Button className="btn btn-primary" fullWidth variant="filled">
+                                    Aplicar Filtros
+                                </Button>
+                            </form>
+                        </div>
+                    </div>
+                )
+            }
 
             {/* Tabela */}
             <div className="panel datatables">
@@ -202,8 +235,8 @@ const Empresas = () => {
                     }
                 />
             </div>
-        </div>
+        </div >
     );
 };
 
-export default Empresas;
+export default EmpresasList;

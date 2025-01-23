@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
-import { setPageTitle } from '../store/themeConfigSlice';
+import { setPageTitle } from '../../store/themeConfigSlice';
 import { Button, Input, Select } from '@mantine/core';
 import sortBy from 'lodash/sortBy';
+import IconFilter from '../../components/Icon/IconFilter';
 
 const rowData = [
     {
@@ -27,6 +28,8 @@ const rowData = [
         company: 'POLARAX',
     }
 ];
+
+
 
 const Contatos = () => {
     const dispatch = useDispatch();
@@ -107,84 +110,90 @@ const Contatos = () => {
         return '';
     };
 
+    const [activeFilters, setActiveFilters] = useState(0);
+
     return (
-        <div className="mx-auto p-4"> {/* add container caso queira que não fique em tela cheia */}
+        <div>
             {/* Filtros e Barra de Pesquisa */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-5 mb-6">
-                {/* Botões Importar e Criar Contato */}
-                <div className="flex gap-2 justify-end items-center col-span-1 sm:col-span-2 lg:col-span-4">
+            <div className="flex justify-between items-center mb-4">
+                {/* Botões Importar e Criar Empresa */}
+                <div className="flex items-center gap-2 ml-auto">
                     <Button variant="outline" onClick={handleImportClick}>
                         Importar
                     </Button>
                     <Button className="btn btn-primary" onClick={handleCreateContact}>
-                        Criar Contato
+                        Criar Empresa
                     </Button>
                 </div>
-
-                {/* Filtro de Empresa */}
-                <div className="flex items-center">
-                    <Select
-                        className="w-full"
-                        value={selectedCompany}
-                        onChange={setSelectedCompany}
-                        placeholder="Todas as empresas"
-                        data={[
-                            { value: '', label: 'Todas as empresas' },
-                            ...companies.map((company) => ({
-                                value: company.id,
-                                label: company.name,
-                            })),
-                        ]}
-                    />
-                </div>
-
-                {/* Filtro de Empresa */}
-                <div className="flex items-center">
-                    <Select
-                        className="w-full"
-                        value={selectedCompany}
-                        onChange={setSelectedCompany}
-                        placeholder="Todas as empresas"
-                        data={[
-                            { value: '', label: 'Todas as empresas' },
-                            ...companies.map((company) => ({
-                                value: company.id,
-                                label: company.name,
-                            })),
-                        ]}
-                    />
-                </div>
-
-                <div className="flex items-center">
-                    <Select
-                        className="w-full"
-                        value={selectedCompany}
-                        onChange={setSelectedCompany}
-                        placeholder="Todas as empresas"
-                        data={[
-                            { value: '', label: 'Todas as empresas' },
-                            ...companies.map((company) => ({
-                                value: company.id,
-                                label: company.name,
-                            })),
-                        ]}
-                    />
-                </div>
-
-                {/* Campo de Pesquisa */}
-                <div className="flex gap-4 items-center">
-                    <Input
-                        className="flex-1"
-                        placeholder="Pesquisar..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                    <Button variant="outline" onClick={toggleFilterModal}>
-                        Filtros Avançados
-                    </Button>
-                </div>
-
             </div>
+    
+            {/* Filtros */}
+            <div className="flex gap-4 items-center px-4 border mb-4">
+                {/* Funil */}
+                <div className="flex items-center gap-2 p-1 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center mb-0">
+                        Funil:
+                    </label>
+                    <select className="form-select text-white-dark">
+                        <option value="">Funil Padrão</option>
+                        <option value="categoria1">Categoria 1</option>
+                        <option value="categoria2">Categoria 2</option>
+                        <option value="categoria3">Categoria 3</option>
+                    </select>
+                </div>
+    
+                {/* Responsável */}
+                <div className="flex items-center gap-2 p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center mb-0">
+                        Responsável:
+                    </label>
+                    <select className="form-select text-white-dark">
+                        <option value="">Diego Alexandre</option>
+                        <option value="categoria1">Categoria 1</option>
+                        <option value="categoria2">Categoria 2</option>
+                        <option value="categoria3">Categoria 3</option>
+                    </select>
+                </div>
+    
+                {/* Status */}
+                <div className="flex items-center gap-2 p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center mb-0">
+                        Status:
+                    </label>
+                    <select className="form-select text-white-dark">
+                        <option value="">Todos</option>
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                    </select>
+                </div>
+    
+                {/* Ordem */}
+                <div className="flex items-center gap-2 p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center mb-0">
+                        Ordem:
+                    </label>
+                    <select className="form-select text-white-dark">
+                        <option value="">Padrão</option>
+                        <option value="a-z">A-Z</option>
+                        <option value="z-a">Z-A</option>
+                        <option value="recentes">Mais Recentes</option>
+                        <option value="antigos">Mais Antigos</option>
+                    </select>
+                </div>
+    
+                {/* Botão de Filtrar */}
+                <button
+                    type="button"
+                    className="btn btn-primary flex items-center"
+                    onClick={toggleFilterModal}
+                >
+                    <IconFilter className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
+                    Filtrar ({activeFilters})
+                </button>
+            </div>
+      
+
+    
 
             {/* Modal Lateral */}
             {
