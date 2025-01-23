@@ -24,10 +24,16 @@ import IconPencilPaper from '../../components/Icon/IconPencilPaper';
 import IconX from '../../components/Icon/IconX';
 import IconRestore from '../../components/Icon/IconRestore';
 
-const Todolist = () => {
+import { useNavigate } from "react-router-dom";
+import IconChecks from '../../components/Icon/IconChecks';
+import IconFilter from '../../components/Icon/IconFilter';
+import Negociacoes from './NegociacoesBoard';
+
+const NegociacoesList = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Todolist'));
+        dispatch(setPageTitle(''));
     });
     const defaultParams = {
         id: null,
@@ -234,31 +240,205 @@ const Todolist = () => {
 
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
 
+    const [isFilterModalOpen, setFilterModalOpen] = useState(false);
+
+    const toggleFilterModal = () => {
+        setFilterModalOpen(!isFilterModalOpen);
+    };
+
+    const [activeFilters, setActiveFilters] = useState(0);
+
+
     return (
         <div>
+            {/* First Row */}
+            <div className="flex justify-between items-center mb-4">
+
+                <div className="relative inline-flex align-middle">
+                    <button
+                        type="button"
+                        className={`btn btn-dark ltr:rounded-r-none rtl:rounded-l-none "btn-primary" : "btn-secondary"}`}
+                        onClick={() => navigate("/neg/board")}
+                    >
+                        <IconChecks className="w-5 h-5" />
+                    </button>
+                    <button
+                        type="button"
+                        className={`btn btn-dark ltr:rounded-l-none rtl:rounded-r-none "btn-primary" : "btn-secondary"}`}
+                        onClick={() => navigate("/neg/list")}
+                    >
+                        <IconListCheck className="w-5 h-5" />
+                    </button>
+                </div>
+
+
+                <div className="flex items-center gap-2">
+                    <button type="button" className="btn btn-secondary">
+                        <IconHorizontalDots className="w-5 h-5" />
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        //onClick={() => {
+                        //    addEditProject();
+                        //}}
+                        >
+                        <IconPlus className="w-5 h-5 ltr:mr-3 rtl:ml-3" />
+                        Adicionar
+                    </button>
+                </div>
+            </div>
+
+            {/* Second Row */}
+            <div className="flex gap-4 items-center px-4 border mb-4">
+
+                <div className="flex items-center gap-2 p-1 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: "0px" }}>
+                        Funil:
+                    </label>
+                    <select className="form-select text-white-dark">
+                        <option value="">Funil Padrão</option>
+                        <option value="categoria1">Categoria 1</option>
+                        <option value="categoria2">Categoria 2</option>
+                        <option value="categoria3">Categoria 3</option>
+                    </select>
+                </div>
+
+                <div className="flex items-center gap-2 p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: "0px" }}>Responsável:</label>
+                    <select className="form-select text-white-dark">
+                        <option value="">Diego Alexandre</option>
+                        <option value="categoria1">Categoria 1</option>
+                        <option value="categoria2">Categoria 2</option>
+                        <option value="categoria3">Categoria 3</option>
+                    </select>
+                </div>
+
+                <div className="flex items-center gap-2 p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: "0px" }}>Status:</label>
+                    <select className="form-select text-white-dark">
+                        <option value="">Todos</option>
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                    </select>
+                </div>
+
+                <div className="flex items-center gap-2 p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: "0px" }}>Ordem:</label>
+                    <select className="form-select text-white-dark">
+                        <option value="">Padrão</option>
+                        <option value="a-z">A-Z</option>
+                        <option value="z-a">Z-A</option>
+                        <option value="recentes">Mais Recentes</option>
+                        <option value="antigos">Mais Antigos</option>
+                    </select>
+                </div>
+
+                <button
+                    type="button"
+                    className="btn btn-primary flex items-center"
+                    onClick={toggleFilterModal}
+                >
+                    <IconFilter className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
+                    Filtrar ({activeFilters})
+                </button>
+            </div>
+
+            {/* Modal Lateral de Filtragem */}
+            {isFilterModalOpen && (
+                <div className="fixed inset-0 z-50 flex">
+                    <div
+                        className="bg-gray-800 bg-opacity-50 flex-1"
+                        onClick={toggleFilterModal}
+                    ></div>
+                    <div className="bg-white w-80 p-5 shadow-lg">
+                        <h2 className="text-lg font-semibold mb-4">Filtrar Cards</h2>
+                        <form>
+                            {/* Dono do Card */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Dono</label>
+                                <input
+                                    type="text"
+                                    className="input input-bordered w-full"
+                                    placeholder="Nome do dono"
+                                />
+                            </div>
+
+                            {/* Status */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Status</label>
+                                <select className="select select-bordered w-full">
+                                    <option value="">Selecione...</option>
+                                    <option value="ativo">Ativo</option>
+                                    <option value="inativo">Inativo</option>
+                                </select>
+                            </div>
+
+                            {/* Ordem */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Ordenar por</label>
+                                <select className="select select-bordered w-full">
+                                    <option value="">Selecione...</option>
+                                    <option value="a-z">A-Z</option>
+                                    <option value="z-a">Z-A</option>
+                                    <option value="recentes">Mais Recentes</option>
+                                    <option value="antigos">Mais Antigos</option>
+                                </select>
+                            </div>
+
+                            {/* Nome */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Nome</label>
+                                <input
+                                    type="text"
+                                    className="input input-bordered w-full"
+                                    placeholder="Nome do card"
+                                />
+                            </div>
+
+                            {/* Data de Criação */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Data de Criação</label>
+                                <input
+                                    type="date"
+                                    className="input input-bordered w-full"
+                                />
+                            </div>
+
+                            {/* Empresa */}
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium mb-2">Empresa</label>
+                                <input
+                                    type="text"
+                                    className="input input-bordered w-full"
+                                    placeholder="Nome da empresa"
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="btn btn-primary w-full"
+                            >
+                                Aplicar Filtros
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
             <div className="flex gap-5 relative sm:h-[calc(100vh_-_150px)] h-full">
                 <div
-                    className={`panel p-4 flex-none w-[240px] max-w-full absolute xl:relative z-10 space-y-4 xl:h-auto h-full xl:block ltr:xl:rounded-r-md ltr:rounded-r-none rtl:xl:rounded-l-md rtl:rounded-l-none hidden ${
-                        isShowTaskMenu && '!block'
-                    }`}
+                    className={`panel p-4 flex-none w-[240px] max-w-full absolute xl:relative z-10 space-y-4 xl:h-auto h-full xl:block ltr:xl:rounded-r-md ltr:rounded-r-none rtl:xl:rounded-l-md rtl:rounded-l-none hidden ${isShowTaskMenu && '!block'
+                        }`}
                 >
-                    <div className="flex flex-col h-full pb-16">
-                        <div className="pb-5">
-                            <div className="flex text-center items-center">
-                                <div className="shrink-0">
-                                    <IconClipboardText />
-                                </div>
-                                <h3 className="text-lg font-semibold ltr:ml-3 rtl:mr-3">Todo list</h3>
-                            </div>
-                        </div>
-                        <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b] mb-5"></div>
+                    <div className="flex flex-col h-full pb-2">
+                        
+                        
                         <PerfectScrollbar className="relative ltr:pr-3.5 rtl:pl-3.5 ltr:-mr-3.5 rtl:-ml-3.5 h-full grow">
                             <div className="space-y-1">
                                 <button
                                     type="button"
-                                    className={`w-full flex justify-between items-center p-2 hover:bg-white-dark/10 rounded-md dark:hover:text-primary hover:text-primary dark:hover:bg-[#181F32] font-medium h-10 ${
-                                        selectedTab === '' ? 'bg-gray-100 dark:text-primary text-primary dark:bg-[#181F32]' : ''
-                                    }`}
+                                    className={`w-full flex justify-between items-center p-2 hover:bg-white-dark/10 rounded-md dark:hover:text-primary hover:text-primary dark:hover:bg-[#181F32] font-medium h-10 ${selectedTab === '' ? 'bg-gray-100 dark:text-primary text-primary dark:bg-[#181F32]' : ''
+                                        }`}
                                     onClick={() => {
                                         tabChanged();
                                         setSelectedTab('');
@@ -274,9 +454,8 @@ const Todolist = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    className={`w-full flex justify-between items-center p-2 hover:bg-white-dark/10 rounded-md dark:hover:text-primary hover:text-primary dark:hover:bg-[#181F32] font-medium h-10 ${
-                                        selectedTab === 'complete' && 'bg-gray-100 dark:text-primary text-primary dark:bg-[#181F32]'
-                                    }`}
+                                    className={`w-full flex justify-between items-center p-2 hover:bg-white-dark/10 rounded-md dark:hover:text-primary hover:text-primary dark:hover:bg-[#181F32] font-medium h-10 ${selectedTab === 'complete' && 'bg-gray-100 dark:text-primary text-primary dark:bg-[#181F32]'
+                                        }`}
                                     onClick={() => {
                                         tabChanged();
                                         setSelectedTab('complete');
@@ -292,9 +471,8 @@ const Todolist = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    className={`w-full flex justify-between items-center p-2 hover:bg-white-dark/10 rounded-md dark:hover:text-primary hover:text-primary dark:hover:bg-[#181F32] font-medium h-10 ${
-                                        selectedTab === 'important' && 'bg-gray-100 dark:text-primary text-primary dark:bg-[#181F32]'
-                                    }`}
+                                    className={`w-full flex justify-between items-center p-2 hover:bg-white-dark/10 rounded-md dark:hover:text-primary hover:text-primary dark:hover:bg-[#181F32] font-medium h-10 ${selectedTab === 'important' && 'bg-gray-100 dark:text-primary text-primary dark:bg-[#181F32]'
+                                        }`}
                                     onClick={() => {
                                         tabChanged();
                                         setSelectedTab('important');
@@ -310,9 +488,8 @@ const Todolist = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    className={`w-full flex justify-between items-center p-2 hover:bg-white-dark/10 rounded-md dark:hover:text-primary hover:text-primary dark:hover:bg-[#181F32] font-medium h-10 ${
-                                        selectedTab === 'trash' && 'bg-gray-100 dark:text-primary text-primary dark:bg-[#181F32]'
-                                    }`}
+                                    className={`w-full flex justify-between items-center p-2 hover:bg-white-dark/10 rounded-md dark:hover:text-primary hover:text-primary dark:hover:bg-[#181F32] font-medium h-10 ${selectedTab === 'trash' && 'bg-gray-100 dark:text-primary text-primary dark:bg-[#181F32]'
+                                        }`}
                                     onClick={() => {
                                         tabChanged();
                                         setSelectedTab('trash');
@@ -327,9 +504,8 @@ const Todolist = () => {
                                 <div className="text-white-dark px-1 py-3">Tags</div>
                                 <button
                                     type="button"
-                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-success ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${
-                                        selectedTab === 'team' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
-                                    }`}
+                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-success ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${selectedTab === 'team' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
+                                        }`}
                                     onClick={() => {
                                         tabChanged();
                                         setSelectedTab('team');
@@ -340,9 +516,8 @@ const Todolist = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-warning ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${
-                                        selectedTab === 'low' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
-                                    }`}
+                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-warning ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${selectedTab === 'low' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
+                                        }`}
                                     onClick={() => {
                                         tabChanged();
                                         setSelectedTab('low');
@@ -354,9 +529,8 @@ const Todolist = () => {
 
                                 <button
                                     type="button"
-                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-primary ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${
-                                        selectedTab === 'medium' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
-                                    }`}
+                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-primary ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${selectedTab === 'medium' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
+                                        }`}
                                     onClick={() => {
                                         tabChanged();
                                         setSelectedTab('medium');
@@ -367,9 +541,8 @@ const Todolist = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-danger ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${
-                                        selectedTab === 'high' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
-                                    }`}
+                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-danger ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${selectedTab === 'high' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
+                                        }`}
                                     onClick={() => {
                                         tabChanged();
                                         setSelectedTab('high');
@@ -380,9 +553,8 @@ const Todolist = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-info ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${
-                                        selectedTab === 'update' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
-                                    }`}
+                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-info ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${selectedTab === 'update' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
+                                        }`}
                                     onClick={() => {
                                         tabChanged();
                                         setSelectedTab('update');
@@ -488,21 +660,20 @@ const Todolist = () => {
                                                                         btnClassName="align-middle"
                                                                         button={
                                                                             <span
-                                                                                className={`badge rounded-full capitalize hover:top-0 hover:text-white ${
-                                                                                    task.priority === 'medium'
+                                                                                className={`badge rounded-full capitalize hover:top-0 hover:text-white ${task.priority === 'medium'
                                                                                         ? 'badge-outline-primary hover:bg-primary'
                                                                                         : task.priority === 'low'
-                                                                                        ? 'badge-outline-warning hover:bg-warning'
-                                                                                        : task.priority === 'high'
-                                                                                        ? 'badge-outline-danger hover:bg-danger'
-                                                                                        : task.priority === 'medium' && isPriorityMenu === task.id
-                                                                                        ? 'text-white bg-primary'
-                                                                                        : task.priority === 'low' && isPriorityMenu === task.id
-                                                                                        ? 'text-white bg-warning'
-                                                                                        : task.priority === 'high' && isPriorityMenu === task.id
-                                                                                        ? 'text-white bg-danger'
-                                                                                        : ''
-                                                                                }`}
+                                                                                            ? 'badge-outline-warning hover:bg-warning'
+                                                                                            : task.priority === 'high'
+                                                                                                ? 'badge-outline-danger hover:bg-danger'
+                                                                                                : task.priority === 'medium' && isPriorityMenu === task.id
+                                                                                                    ? 'text-white bg-primary'
+                                                                                                    : task.priority === 'low' && isPriorityMenu === task.id
+                                                                                                        ? 'text-white bg-warning'
+                                                                                                        : task.priority === 'high' && isPriorityMenu === task.id
+                                                                                                            ? 'text-white bg-danger'
+                                                                                                            : ''
+                                                                                    }`}
                                                                             >
                                                                                 {task.priority}
                                                                             </span>
@@ -549,17 +720,16 @@ const Todolist = () => {
                                                                         btnClassName="align-middle"
                                                                         button={
                                                                             <span
-                                                                                className={`badge rounded-full capitalize hover:top-0 hover:text-white ${
-                                                                                    task.tag === 'team'
+                                                                                className={`badge rounded-full capitalize hover:top-0 hover:text-white ${task.tag === 'team'
                                                                                         ? 'badge-outline-success hover:bg-success'
                                                                                         : task.tag === 'update'
-                                                                                        ? 'badge-outline-info hover:bg-info'
-                                                                                        : task.tag === 'team' && isTagMenu === task.id
-                                                                                        ? 'text-white bg-success '
-                                                                                        : task.tag === 'update' && isTagMenu === task.id
-                                                                                        ? 'text-white bg-info '
-                                                                                        : ''
-                                                                                }`}
+                                                                                            ? 'badge-outline-info hover:bg-info'
+                                                                                            : task.tag === 'team' && isTagMenu === task.id
+                                                                                                ? 'text-white bg-success '
+                                                                                                : task.tag === 'update' && isTagMenu === task.id
+                                                                                                    ? 'text-white bg-info '
+                                                                                                    : ''
+                                                                                    }`}
                                                                             >
                                                                                 {task.tag}
                                                                             </span>
@@ -818,24 +988,22 @@ const Todolist = () => {
                                             <div>{selectedTask.title}</div>
                                             {selectedTask.priority && (
                                                 <div
-                                                    className={`badge rounded-3xl capitalize ${
-                                                        selectedTask.priority === 'medium'
+                                                    className={`badge rounded-3xl capitalize ${selectedTask.priority === 'medium'
                                                             ? 'badge-outline-primary'
                                                             : selectedTask.priority === 'low'
-                                                            ? 'badge-outline-warning '
-                                                            : selectedTask.priority === 'high'
-                                                            ? 'badge-outline-danger '
-                                                            : ''
-                                                    }`}
+                                                                ? 'badge-outline-warning '
+                                                                : selectedTask.priority === 'high'
+                                                                    ? 'badge-outline-danger '
+                                                                    : ''
+                                                        }`}
                                                 >
                                                     {selectedTask.priority}
                                                 </div>
                                             )}
                                             {selectedTask.tag && (
                                                 <div
-                                                    className={`badge rounded-3xl capitalize ${
-                                                        selectedTask.tag === 'team' ? 'badge-outline-success' : selectedTask.tag === 'update' ? 'badge-outline-info ' : ''
-                                                    }`}
+                                                    className={`badge rounded-3xl capitalize ${selectedTask.tag === 'team' ? 'badge-outline-success' : selectedTask.tag === 'update' ? 'badge-outline-info ' : ''
+                                                        }`}
                                                 >
                                                     {selectedTask.tag}
                                                 </div>
@@ -860,4 +1028,4 @@ const Todolist = () => {
     );
 };
 
-export default Todolist;
+export default NegociacoesList;

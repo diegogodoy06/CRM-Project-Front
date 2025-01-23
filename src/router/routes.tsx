@@ -101,29 +101,48 @@ const MarkDownEditor = lazy(() => import('../pages/Forms/MarkDownEditor'));
 const DateRangePicker = lazy(() => import('../pages/Forms/DateRangePicker'));
 const Clipboard = lazy(() => import('../pages/Forms/Clipboard'));
 
+
 {/*------------------------------------------------*/ }
 
-const Negociacoes = lazy(() => import('../pages/Negociacoes'));
-const Empresas = lazy(() => import('../pages/Empresas'));
-const Contatos = lazy(() => import('../pages/Contatos'));
+const NegociacoesBoard = lazy(() => import('../pages/Negociacoes/NegociacoesBoard'));
+const NegociacoesList = lazy(() => import('../pages/Negociacoes/NegociacoesList'));
+
+const EmpresasList = lazy(() => import('../pages/Empresas/EmpresasList'));
+const ContatosList = lazy(() => import('../pages/Contatos/ContatosList'));
+const Login = lazy(() => import('../pages/Auth/Login'));
 
 const routes = [
     // dashboard
     {
         path: '/',
-        element: <Negociacoes />,
+        element: <NegociacoesBoard />,
     },
     {
-        path: '/negociacoes',
-        element: <Negociacoes />,
+        path: '/neg/board',
+        element: <NegociacoesBoard />,
     },
+    {
+        path: '/neg/list',
+        element: <NegociacoesList />,
+    },
+
+
     {  
-        path: '/empresas',
-        element: <Empresas />,
+        path: '/comp/list',
+        element: <EmpresasList />,
     },
+
+
     {
-        path: '/contatos',
-        element: <Contatos />,
+        path: '/cont/list',
+        element: <ContatosList />,
+    },
+
+
+    {
+        path: '/auth/login',
+        Element : <Login />,
+        layout: 'blank',
     },
 
 
