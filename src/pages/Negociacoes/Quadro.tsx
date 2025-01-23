@@ -1,23 +1,25 @@
-import Dropdown from '../components/Dropdown';
+import Dropdown from '../../components/Dropdown';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReactSortable } from 'react-sortablejs';
 import { useState, Fragment, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import Swal from 'sweetalert2';
-import { setPageTitle } from '../store/themeConfigSlice';
-import IconPlus from '../components/Icon/IconPlus';
-import IconPlusCircle from '../components/Icon/IconPlusCircle';
-import IconHorizontalDots from '../components/Icon/IconHorizontalDots';
-import IconTag from '../components/Icon/IconTag';
-import IconCalendar from '../components/Icon/IconCalendar';
-import IconEdit from '../components/Icon/IconEdit';
-import IconTrashLines from '../components/Icon/IconTrashLines';
-import IconX from '../components/Icon/IconX';
-import IconListCheck from '../components/Icon/IconListCheck';
-import IconChecks from '../components/Icon/IconChecks';
-import IconFilter from '../components/Icon/IconFilter';
+import { setPageTitle } from '../../store/themeConfigSlice';
+import IconPlus from '../../components/Icon/IconPlus';
+import IconPlusCircle from '../../components/Icon/IconPlusCircle';
+import IconHorizontalDots from '../../components/Icon/IconHorizontalDots';
+import IconTag from '../../components/Icon/IconTag';
+import IconCalendar from '../../components/Icon/IconCalendar';
+import IconEdit from '../../components/Icon/IconEdit';
+import IconTrashLines from '../../components/Icon/IconTrashLines';
+import IconX from '../../components/Icon/IconX';
+import IconListCheck from '../../components/Icon/IconListCheck';
+import IconChecks from '../../components/Icon/IconChecks';
+import { useNavigate } from "react-router-dom";
+import IconFilter from '../../components/Icon/IconFilter';
 
-const Negociacoes = () => {
+const NegociacoesBoard = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle(''));
@@ -258,29 +260,31 @@ const Negociacoes = () => {
         setViewMode(mode);
     };
 
-    const [activeFilters, setActiveFilters] = useState(0); // Track active filters
+    const [activeFilters, setActiveFilters] = useState(0);
 
 
     return (
         <div>
             {/* First Row */}
             <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center gap-2">
+
+                <div className="relative inline-flex align-middle">
                     <button
                         type="button"
-                        className={`btn ${viewMode === "kambam" ? "btn-primary" : "btn-secondary"}`}
-                        onClick={() => handleViewModeChange("kambam")}
+                        className={`btn btn-dark ltr:rounded-r-none rtl:rounded-l-none ${viewMode === "kambam" ? "btn-primary" : "btn-secondary"}`}
+                        onClick={() => navigate("/neg/board")}
                     >
                         <IconChecks className="w-5 h-5" />
                     </button>
                     <button
                         type="button"
-                        className={`btn ${viewMode === "lista" ? "btn-primary" : "btn-secondary"}`}
-                        onClick={() => handleViewModeChange("lista")}
+                        className={`btn btn-dark ltr:rounded-l-none rtl:rounded-r-none ${viewMode === "lista" ? "btn-primary" : "btn-secondary"}`}
+                        onClick={() => navigate("/neg/list")}
                     >
                         <IconListCheck className="w-5 h-5" />
                     </button>
                 </div>
+
 
                 <div className="flex items-center gap-2">
                     <button type="button" className="btn btn-secondary">
@@ -288,11 +292,10 @@ const Negociacoes = () => {
                     </button>
                     <button
                         type="button"
-                        className="btn btn-primary flex"
+                        className="btn btn-primary"
                         onClick={() => {
                             addEditProject();
-                        }}
-                    >
+                        }}>
                         <IconPlus className="w-5 h-5 ltr:mr-3 rtl:ml-3" />
                         Adicionar
                     </button>
@@ -300,11 +303,13 @@ const Negociacoes = () => {
             </div>
 
             {/* Second Row */}
-            <div className="flex gap-4 items-center mb-4">
+            <div className="flex gap-4 items-center px-4 border mb-4">
 
-                <div className="flex items-center gap-2 border p-2 rounded-md flex-1">
-                    <label className="text-sm font-medium">Funil:</label>
-                    <select className="select select-bordered w-full">
+                <div className="flex items-center gap-2 p-1 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: "0px" }}>
+                        Funil:
+                    </label>
+                    <select className="form-select text-white-dark">
                         <option value="">Funil Padrão</option>
                         <option value="categoria1">Categoria 1</option>
                         <option value="categoria2">Categoria 2</option>
@@ -312,23 +317,28 @@ const Negociacoes = () => {
                     </select>
                 </div>
 
-                <div className="flex items-center gap-2 border p-2 rounded-md flex-1">
-                    <label className="text-sm font-medium">Dono:</label>
-                    <input type="text" className="input input-bordered w-full" placeholder="Nome do dono" />
+                <div className="flex items-center gap-2 p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: "0px" }}>Responsável:</label>
+                    <select className="form-select text-white-dark">
+                        <option value="">Diego Alexandre</option>
+                        <option value="categoria1">Categoria 1</option>
+                        <option value="categoria2">Categoria 2</option>
+                        <option value="categoria3">Categoria 3</option>
+                    </select>
                 </div>
 
-                <div className="flex items-center gap-2 border p-2 rounded-md flex-1">
-                    <label className="text-sm font-medium">Status:</label>
-                    <select className="select select-bordered w-full">
+                <div className="flex items-center gap-2 p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: "0px" }}>Status:</label>
+                    <select className="form-select text-white-dark">
                         <option value="">Todos</option>
                         <option value="ativo">Ativo</option>
                         <option value="inativo">Inativo</option>
                     </select>
                 </div>
 
-                <div className="flex items-center gap-2 border p-2 rounded-md flex-1">
-                    <label className="text-sm font-medium">Ordem:</label>
-                    <select className="select select-bordered w-full">
+                <div className="flex items-center gap-2 p-2 rounded-md flex-1">
+                    <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: "0px" }}>Ordem:</label>
+                    <select className="form-select text-white-dark">
                         <option value="">Padrão</option>
                         <option value="a-z">A-Z</option>
                         <option value="z-a">Z-A</option>
@@ -339,7 +349,7 @@ const Negociacoes = () => {
 
                 <button
                     type="button"
-                    className="btn btn-secondary flex items-center"
+                    className="btn btn-primary flex items-center"
                     onClick={toggleFilterModal}
                 >
                     <IconFilter className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
@@ -689,7 +699,7 @@ const Negociacoes = () => {
                     </div>
                 </Dialog>
             </Transition>
-            
+
             {/* add task modal */}
             <Transition appear show={isAddTaskModal} as={Fragment}>
                 <Dialog as="div" open={isAddTaskModal} onClose={() => setIsAddTaskModal(false)} className="relative z-50">
@@ -801,4 +811,4 @@ const Negociacoes = () => {
     );
 };
 
-export default Negociacoes;
+export default NegociacoesBoard;

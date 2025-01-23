@@ -104,7 +104,9 @@ const Clipboard = lazy(() => import('../pages/Forms/Clipboard'));
 
 {/*------------------------------------------------*/ }
 
-const Negociacoes = lazy(() => import('../pages/Negociacoes'));
+const NegociacoesQuadro = lazy(() => import('../pages/Negociacoes/Quadro'));
+const NegociacoesLista = lazy(() => import('../pages/Negociacoes/List'));
+
 const Empresas = lazy(() => import('../pages/Empresas'));
 const Contatos = lazy(() => import('../pages/Contatos'));
 const Login = lazy(() => import('../pages/Auth/Login'));
@@ -113,12 +115,18 @@ const routes = [
     // dashboard
     {
         path: '/',
-        element: <Negociacoes />,
+        element: <NegociacoesQuadro />,
     },
     {
-        path: '/negociacoes',
-        element: <Negociacoes />,
+        path: '/neg/board',
+        element: <NegociacoesQuadro />,
     },
+    {
+        path: '/neg/list',
+        element: <NegociacoesLista />,
+    },
+
+
     {  
         path: '/empresas',
         element: <Empresas />,
