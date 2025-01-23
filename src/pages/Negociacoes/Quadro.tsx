@@ -250,14 +250,8 @@ const NegociacoesBoard = () => {
 
     const [isFilterModalOpen, setFilterModalOpen] = useState(false);
 
-    const [viewMode, setViewMode] = useState("kambam"); // kambam or lista
-
     const toggleFilterModal = () => {
         setFilterModalOpen(!isFilterModalOpen);
-    };
-
-    const handleViewModeChange = (mode: "kambam" | "lista") => {
-        setViewMode(mode);
     };
 
     const [activeFilters, setActiveFilters] = useState(0);
@@ -271,14 +265,14 @@ const NegociacoesBoard = () => {
                 <div className="relative inline-flex align-middle">
                     <button
                         type="button"
-                        className={`btn btn-dark ltr:rounded-r-none rtl:rounded-l-none ${viewMode === "kambam" ? "btn-primary" : "btn-secondary"}`}
+                        className={`btn btn-dark ltr:rounded-r-none rtl:rounded-l-none "btn-primary" : "btn-secondary"}`}
                         onClick={() => navigate("/neg/board")}
                     >
                         <IconChecks className="w-5 h-5" />
                     </button>
                     <button
                         type="button"
-                        className={`btn btn-dark ltr:rounded-l-none rtl:rounded-r-none ${viewMode === "lista" ? "btn-primary" : "btn-secondary"}`}
+                        className={`btn btn-dark ltr:rounded-l-none rtl:rounded-r-none "btn-primary" : "btn-secondary"}`}
                         onClick={() => navigate("/neg/list")}
                     >
                         <IconListCheck className="w-5 h-5" />
