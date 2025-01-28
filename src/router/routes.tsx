@@ -111,6 +111,9 @@ const EmpresasList = lazy(() => import('../pages/Empresas/EmpresasList'));
 const ContatosList = lazy(() => import('../pages/Contatos/ContatosList'));
 const Login = lazy(() => import('../pages/Auth/Login'));
 
+const TarefasList = lazy(() => import('../pages/Tarefas/TarefasList'));
+const TarefasCalendar = lazy(() => import('../pages/Tarefas/TarefasCalendar'));
+
 const routes = [
     // dashboard
     {
@@ -138,6 +141,14 @@ const routes = [
         element: <ContatosList />,
     },
 
+    {
+        path: '/tsk/list',
+        element: <TarefasList />,
+    },
+    {
+        path: '/tsk/calendar',
+        element: <TarefasCalendar />,
+    },
 
     {
         path: '/auth/login',
