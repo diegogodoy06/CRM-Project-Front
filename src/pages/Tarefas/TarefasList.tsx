@@ -425,155 +425,10 @@ const NegociacoesList = () => {
                     </div>
                 </div>
             )}
+            
             <div className="flex gap-5 relative sm:h-[calc(100vh_-_150px)] h-full">
-                <div
-                    className={`panel p-4 flex-none w-[240px] max-w-full absolute xl:relative z-10 space-y-4 xl:h-auto h-full xl:block ltr:xl:rounded-r-md ltr:rounded-r-none rtl:xl:rounded-l-md rtl:rounded-l-none hidden ${isShowTaskMenu && '!block'
-                        }`}
-                >
-                    <div className="flex flex-col h-full pb-2">
-                        
-                        
-                        <PerfectScrollbar className="relative ltr:pr-3.5 rtl:pl-3.5 ltr:-mr-3.5 rtl:-ml-3.5 h-full grow">
-                            <div className="space-y-1">
-                                <button
-                                    type="button"
-                                    className={`w-full flex justify-between items-center p-2 hover:bg-white-dark/10 rounded-md dark:hover:text-primary hover:text-primary dark:hover:bg-[#181F32] font-medium h-10 ${selectedTab === '' ? 'bg-gray-100 dark:text-primary text-primary dark:bg-[#181F32]' : ''
-                                        }`}
-                                    onClick={() => {
-                                        tabChanged();
-                                        setSelectedTab('');
-                                    }}
-                                >
-                                    <div className="flex items-center">
-                                        <IconListCheck className="w-4.5 h-4.5 shrink-0" />
-                                        <div className="ltr:ml-3 rtl:mr-3">Inbox</div>
-                                    </div>
-                                    <div className="bg-primary-light dark:bg-[#060818] rounded-md py-0.5 px-2 font-semibold whitespace-nowrap">
-                                        {allTasks && allTasks.filter((d) => d.status !== 'trash').length}
-                                    </div>
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`w-full flex justify-between items-center p-2 hover:bg-white-dark/10 rounded-md dark:hover:text-primary hover:text-primary dark:hover:bg-[#181F32] font-medium h-10 ${selectedTab === 'complete' && 'bg-gray-100 dark:text-primary text-primary dark:bg-[#181F32]'
-                                        }`}
-                                    onClick={() => {
-                                        tabChanged();
-                                        setSelectedTab('complete');
-                                    }}
-                                >
-                                    <div className="flex items-center">
-                                        <IconThumbUp className="w-5 h-5 shrink-0" />
-                                        <div className="ltr:ml-3 rtl:mr-3">Done</div>
-                                    </div>
-                                    <div className="bg-primary-light dark:bg-[#060818] rounded-md py-0.5 px-2 font-semibold whitespace-nowrap">
-                                        {allTasks && allTasks.filter((d) => d.status === 'complete').length}
-                                    </div>
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`w-full flex justify-between items-center p-2 hover:bg-white-dark/10 rounded-md dark:hover:text-primary hover:text-primary dark:hover:bg-[#181F32] font-medium h-10 ${selectedTab === 'important' && 'bg-gray-100 dark:text-primary text-primary dark:bg-[#181F32]'
-                                        }`}
-                                    onClick={() => {
-                                        tabChanged();
-                                        setSelectedTab('important');
-                                    }}
-                                >
-                                    <div className="flex items-center">
-                                        <IconStar className="shrink-0" />
-                                        <div className="ltr:ml-3 rtl:mr-3">Important</div>
-                                    </div>
-                                    <div className="bg-primary-light dark:bg-[#060818] rounded-md py-0.5 px-2 font-semibold whitespace-nowrap">
-                                        {allTasks && allTasks.filter((d) => d.status === 'important').length}
-                                    </div>
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`w-full flex justify-between items-center p-2 hover:bg-white-dark/10 rounded-md dark:hover:text-primary hover:text-primary dark:hover:bg-[#181F32] font-medium h-10 ${selectedTab === 'trash' && 'bg-gray-100 dark:text-primary text-primary dark:bg-[#181F32]'
-                                        }`}
-                                    onClick={() => {
-                                        tabChanged();
-                                        setSelectedTab('trash');
-                                    }}
-                                >
-                                    <div className="flex items-center">
-                                        <IconTrashLines className="shrink-0" />
-                                        <div className="ltr:ml-3 rtl:mr-3">Trash</div>
-                                    </div>
-                                </button>
-                                <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>
-                                <div className="text-white-dark px-1 py-3">Tags</div>
-                                <button
-                                    type="button"
-                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-success ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${selectedTab === 'team' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
-                                        }`}
-                                    onClick={() => {
-                                        tabChanged();
-                                        setSelectedTab('team');
-                                    }}
-                                >
-                                    <IconSquareRotated className="fill-success shrink-0" />
-                                    <div className="ltr:ml-3 rtl:mr-3">Team</div>
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-warning ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${selectedTab === 'low' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
-                                        }`}
-                                    onClick={() => {
-                                        tabChanged();
-                                        setSelectedTab('low');
-                                    }}
-                                >
-                                    <IconSquareRotated className="fill-warning shrink-0" />
-                                    <div className="ltr:ml-3 rtl:mr-3">Low</div>
-                                </button>
-
-                                <button
-                                    type="button"
-                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-primary ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${selectedTab === 'medium' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
-                                        }`}
-                                    onClick={() => {
-                                        tabChanged();
-                                        setSelectedTab('medium');
-                                    }}
-                                >
-                                    <IconSquareRotated className="fill-primary shrink-0" />
-                                    <div className="ltr:ml-3 rtl:mr-3">Medium</div>
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-danger ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${selectedTab === 'high' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
-                                        }`}
-                                    onClick={() => {
-                                        tabChanged();
-                                        setSelectedTab('high');
-                                    }}
-                                >
-                                    <IconSquareRotated className="fill-danger shrink-0" />
-                                    <div className="ltr:ml-3 rtl:mr-3">High</div>
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`w-full flex items-center h-10 p-1 hover:bg-white-dark/10 rounded-md dark:hover:bg-[#181F32] font-medium text-info ltr:hover:pl-3 rtl:hover:pr-3 duration-300 ${selectedTab === 'update' && 'ltr:pl-3 rtl:pr-3 bg-gray-100 dark:bg-[#181F32]'
-                                        }`}
-                                    onClick={() => {
-                                        tabChanged();
-                                        setSelectedTab('update');
-                                    }}
-                                >
-                                    <IconSquareRotated className="fill-info shrink-0" />
-                                    <div className="ltr:ml-3 rtl:mr-3">Update</div>
-                                </button>
-                            </div>
-                        </PerfectScrollbar>
-                        <div className="ltr:left-0 rtl:right-0 absolute bottom-0 p-4 w-full">
-                            <button className="btn btn-primary w-full" type="button" onClick={() => addEditTask()}>
-                                <IconPlus className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                Add New Task
-                            </button>
-                        </div>
-                    </div>
-                </div>
                 <div className={`overlay bg-black/60 z-[5] w-full h-full rounded-md absolute hidden ${isShowTaskMenu && '!block xl:!hidden'}`} onClick={() => setIsShowTaskMenu(!isShowTaskMenu)}></div>
+
                 <div className="panel p-0 flex-1 overflow-auto h-full">
                     <div className="flex flex-col h-full">
                         <div className="p-4 flex sm:flex-row flex-col w-full sm:items-center gap-4">
@@ -1024,6 +879,10 @@ const NegociacoesList = () => {
                     </Dialog>
                 </Transition>
             </div>
+
+
+
+
         </div>
     );
 };
