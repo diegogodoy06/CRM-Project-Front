@@ -74,14 +74,14 @@ const ERROR404 = lazy(() => import('../pages/Pages/Error404'));
 const ERROR500 = lazy(() => import('../pages/Pages/Error500'));
 const ERROR503 = lazy(() => import('../pages/Pages/Error503'));
 const Maintenence = lazy(() => import('../pages/Pages/Maintenence'));
-const LoginBoxed = lazy(() => import('../pages/Authentication/LoginBoxed'));
-const RegisterBoxed = lazy(() => import('../pages/Authentication/RegisterBoxed'));
-const UnlockBoxed = lazy(() => import('../pages/Authentication/UnlockBox'));
-const RecoverIdBoxed = lazy(() => import('../pages/Authentication/RecoverIdBox'));
-const LoginCover = lazy(() => import('../pages/Authentication/LoginCover'));
-const RegisterCover = lazy(() => import('../pages/Authentication/RegisterCover'));
-const RecoverIdCover = lazy(() => import('../pages/Authentication/RecoverIdCover'));
-const UnlockCover = lazy(() => import('../pages/Authentication/UnlockCover'));
+const LoginBoxed = lazy(() => import('../pages/Excluir/LoginBoxed'));
+const RegisterBoxed = lazy(() => import('../pages/Excluir/RegisterBoxed'));
+const UnlockBoxed = lazy(() => import('../pages/Excluir/UnlockBox'));
+const RecoverIdBoxed = lazy(() => import('../pages/Excluir/RecoverIdBox'));
+const LoginCover = lazy(() => import('../pages/Authentication/Login'));
+const RegisterCover = lazy(() => import('../pages/Excluir/RegisterCover'));
+const RecoverIdCover = lazy(() => import('../pages/Excluir/RecoverIdCover'));
+const UnlockCover = lazy(() => import('../pages/Excluir/UnlockCover'));
 const About = lazy(() => import('../pages/About'));
 const Error = lazy(() => import('../components/Error'));
 const Charts = lazy(() => import('../pages/Charts'));
@@ -109,7 +109,6 @@ const NegociacoesList = lazy(() => import('../pages/Negociacoes/NegociacoesList'
 
 const EmpresasList = lazy(() => import('../pages/Empresas/EmpresasList'));
 const ContatosList = lazy(() => import('../pages/Contatos/ContatosList'));
-const Login = lazy(() => import('../pages/Auth/Login'));
 
 const TarefasList = lazy(() => import('../pages/Tarefas/TarefasList'));
 const TarefasCalendar = lazy(() => import('../pages/Tarefas/TarefasCalendar'));
@@ -150,11 +149,6 @@ const routes = [
         element: <TarefasCalendar />,
     },
 
-    {
-        path: '/auth/login',
-        Element : <Login />,
-        layout: 'blank',
-    },
 
 
     {/*------------------------------------------------*/ },
