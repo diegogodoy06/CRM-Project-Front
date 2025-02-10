@@ -1,5 +1,6 @@
 import path from 'path';
 import { lazy } from 'react';
+import { redirect } from 'react-router-dom';
 
 const Analytics = lazy(() => import('../pages/Analytics'));
 const Finance = lazy(() => import('../pages/Finance'));
@@ -117,6 +118,7 @@ const routes = [
     // dashboard
     {
         path: '/',
+       // redirectTo: '/neg/list',
         element: <NegociacoesBoard />,
     },
     {
@@ -126,6 +128,7 @@ const routes = [
     {
         path: '/neg/list',
         element: <NegociacoesList />,
+
     },
 
 
@@ -496,7 +499,7 @@ const routes = [
         layout: 'blank',
     },
     {
-        path: '/auth/cover-login',
+        path: '/auth/login',
         element: <LoginCover />,
         layout: 'blank',
     },
