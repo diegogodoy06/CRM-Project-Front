@@ -39,7 +39,7 @@ const EmpresasList = () => {
   // Utiliza o dispatch para atualizar o título da página
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(setPageTitle('Empresas'));
+    dispatch(setPageTitle(''));
   }, [dispatch]);
 
   // Estados para paginação
