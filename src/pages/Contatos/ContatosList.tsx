@@ -2,7 +2,16 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { setPageTitle } from '../../store/themeConfigSlice';
-import { Button, Input, Select, Skeleton } from '@mantine/core';
+import {
+  Button,
+  Input,
+  Select,
+  Drawer,
+  TextInput,
+  Group,
+  Stack,
+  Skeleton,
+} from '@mantine/core';
 import sortBy from 'lodash/sortBy';
 import IconFilter from '../../components/Icon/IconFilter';
 
@@ -36,6 +45,7 @@ const Contatos = () => {
     dispatch(setPageTitle(''));
   }, [dispatch]);
 
+  // Estados para a listagem
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 50, 100];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
@@ -50,7 +60,14 @@ const Contatos = () => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [activeFilters] = useState(0);
 
-  // Estado de loading para simular o carregamento dos dados (ex: 2 segundos)
+  // Lista de empresas para o select do modal
+  const companies = [
+    { id: '1', name: 'Empresa A' },
+    { id: '2', name: 'Empresa B' },
+    { id: '3', name: 'Empresa C' },
+  ];
+
+  // Estado de loading para a tabela (skeleton)
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -59,13 +76,36 @@ const Contatos = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const companies = [
-    { id: '1', name: 'Empresa A' },
-    { id: '2', name: 'Empresa B' },
-    { id: '3', name: 'Empresa C' },
-  ];
+  // Estados para o modal de cadastro de novo contato
+  const [isNewContactModalOpen, setIsNewContactModalOpen] = useState(false);
+  const [nome, setNome] = useState('');
+  const [cargo, setCargo] = useState('');
+  const [empresaId, setEmpresaId] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [telefoneTipo, setTelefoneTipo] = useState('');
 
-  // Filtragem dos registros
+  const handleNewContactSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // Aqui você pode realizar as validações e enviar os dados para sua API
+    console.log('Novo contato cadastrado:', {
+      nome,
+      cargo,
+      empresaId,
+      telefone,
+      telefoneTipo,
+    });
+
+    // Após o cadastro, fecha o modal e limpa os campos
+    setIsNewContactModalOpen(false);
+    setNome('');
+    setCargo('');
+    setEmpresaId('');
+    setTelefone('');
+    setTelefoneTipo('');
+  };
+
+  // Lógica de filtragem dos registros
   useEffect(() => {
     const filteredData = rowData.filter((record) => {
       return (
@@ -74,7 +114,7 @@ const Contatos = () => {
           record.lastName.toLowerCase().includes(search.toLowerCase()) ||
           record.company.toLowerCase().includes(search.toLowerCase()) ||
           record.email.toLowerCase().includes(search.toLowerCase()) ||
-          record.age.toString().toLowerCase().includes(search.toLowerCase()) ||
+          record.age.toString().includes(search.toLowerCase()) ||
           record.dob.toLowerCase().includes(search.toLowerCase()) ||
           record.phone.toLowerCase().includes(search.toLowerCase()))
       );
@@ -101,34 +141,23 @@ const Contatos = () => {
 
   const handleImportClick = () => {
     console.log('Importar dados...');
-    // Lógica de importação
   };
 
+  // Abre o modal para cadastro de novo contato
   const handleCreateContact = () => {
-    console.log('Criar novo contato...');
-    // Lógica para criar contato
-  };
-
-  const formatDate = (date: any) => {
-    if (date) {
-      const dt = new Date(date);
-      const month = dt.getMonth() + 1 < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1;
-      const day = dt.getDate() < 10 ? '0' + dt.getDate() : dt.getDate();
-      return day + '/' + month + '/' + dt.getFullYear();
-    }
-    return '';
+    setIsNewContactModalOpen(true);
   };
 
   return (
     <div>
-      {/* Botões de Importar e Criar Empresa */}
+      {/* Botões de ações */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2 ml-auto">
           <Button variant="outline" onClick={handleImportClick}>
             Importar
           </Button>
           <Button className="btn btn-primary" onClick={handleCreateContact}>
-            Criar Empresa
+            Novo Contato
           </Button>
         </div>
       </div>
@@ -193,7 +222,7 @@ const Contatos = () => {
         </button>
       </div>
 
-      {/* Modal Lateral para Filtros */}
+      {/* Modal lateral para filtros (mantido conforme exemplo original) */}
       {isFilterModalOpen && (
         <div className="fixed inset-0 z-50 flex">
           <div
@@ -205,7 +234,11 @@ const Contatos = () => {
             <form>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Dono</label>
-                <Input type="text" className="w-full" placeholder="Nome do dono" />
+                <Input
+                  type="text"
+                  className="w-full"
+                  placeholder="Nome do dono"
+                />
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Status</label>
@@ -219,7 +252,9 @@ const Contatos = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Ordenar por</label>
+                <label className="block text-sm font-medium mb-2">
+                  Ordenar por
+                </label>
                 <Select
                   className="w-full"
                   placeholder="Selecione..."
@@ -232,16 +267,30 @@ const Contatos = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Nome</label>
-                <Input type="text" className="w-full" placeholder="Nome do card" />
+                <label className="block text-sm font-medium mb-2">
+                  Nome
+                </label>
+                <Input
+                  type="text"
+                  className="w-full"
+                  placeholder="Nome do card"
+                />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Data de Criação</label>
+                <label className="block text-sm font-medium mb-2">
+                  Data de Criação
+                </label>
                 <Input type="date" className="w-full" />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Empresa</label>
-                <Input type="text" className="w-full" placeholder="Nome da empresa" />
+                <label className="block text-sm font-medium mb-2">
+                  Empresa
+                </label>
+                <Input
+                  type="text"
+                  className="w-full"
+                  placeholder="Nome da empresa"
+                />
               </div>
               <Button className="btn btn-primary" fullWidth variant="filled">
                 Aplicar Filtros
@@ -251,7 +300,7 @@ const Contatos = () => {
         </div>
       )}
 
-      {/* Tabela: Skeleton somente enquanto loading */}
+      {/* Tabela de contatos com skeleton enquanto carrega */}
       <div className="panel datatables">
         {loading ? (
           <table className="w-full table-auto">
@@ -332,6 +381,80 @@ const Contatos = () => {
           />
         )}
       </div>
+
+      {/* Drawer para cadastro de novo contato com estilização aprimorada */}
+      <Drawer
+        opened={isNewContactModalOpen}
+        onClose={() => setIsNewContactModalOpen(false)}
+        title={<h2 style={{ margin: 0 }}>Cadastrar Novo Contato</h2>}
+        padding="xl"
+        size="md"
+        position="right"
+        overlayOpacity={0.55}
+        overlayBlur={3}
+        styles={{
+          drawer: { maxWidth: '400px', width: '100%' },
+          header: {
+            backgroundColor: '#f5f5f5',
+            padding: '1rem',
+            borderBottom: '1px solid #ddd',
+          },
+        }}
+      >
+        <form onSubmit={handleNewContactSubmit}>
+          <Stack spacing="md">
+            <TextInput
+              label="Nome"
+              placeholder="Digite o nome"
+              value={nome}
+              onChange={(e) => setNome(e.currentTarget.value)}
+              required
+            />
+            <TextInput
+              label="Cargo"
+              placeholder="Digite o cargo"
+              value={cargo}
+              onChange={(e) => setCargo(e.currentTarget.value)}
+            />
+            <Select
+              label="Empresa"
+              placeholder="Selecione a empresa"
+              data={companies.map((comp) => ({
+                value: comp.id,
+                label: comp.name,
+              }))}
+              value={empresaId}
+              onChange={setEmpresaId}
+              required
+            />
+            <TextInput
+              label="Telefone"
+              placeholder="Digite o telefone"
+              value={telefone}
+              onChange={(e) => setTelefone(e.currentTarget.value)}
+              required
+            />
+            <Select
+              label="Tipo de Telefone"
+              placeholder="Selecione o tipo"
+              data={[
+                { value: '1', label: 'Celular' },
+                { value: '2', label: 'Fixo' },
+                { value: '3', label: 'Comercial' },
+              ]}
+              value={telefoneTipo}
+              onChange={setTelefoneTipo}
+              required
+            />
+          </Stack>
+          <Group position="apart" mt="xl">
+            <Button variant="outline" onClick={() => setIsNewContactModalOpen(false)}>
+              Cancelar
+            </Button>
+            <Button type="submit">Cadastrar</Button>
+          </Group>
+        </form>
+      </Drawer>
     </div>
   );
 };
