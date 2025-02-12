@@ -64,7 +64,7 @@ const RangeSearch = lazy(() => import('../pages/DataTables/RangeSearch'));
 const Export = lazy(() => import('../pages/DataTables/Export'));
 const ColumnChooser = lazy(() => import('../pages/DataTables/ColumnChooser'));
 const Profile = lazy(() => import('../pages/Excluir/Profile'));
-const AccountSetting = lazy(() => import('../pages/Users/AccountSetting'));
+const UsersProfile = lazy(() => import('../pages/Users/UsersProfile'));
 const KnowledgeBase = lazy(() => import('../pages/Pages/KnowledgeBase'));
 const ContactUsBoxed = lazy(() => import('../pages/Pages/ContactUsBoxed'));
 const ContactUsCover = lazy(() => import('../pages/Pages/ContactUsCover'));
@@ -152,7 +152,10 @@ const routes = [
         element: <TarefasCalendar />,
     },
 
-
+    {
+        path: '/users/profile',
+        element: <UsersProfile />,
+    },
 
     {/*------------------------------------------------*/ },
 
@@ -421,13 +424,10 @@ const routes = [
     },
     // Users page
     {
-        path: '/users/profile',
+        path: '/users/settings',
         element: <Profile />,
     },
-    {
-        path: '/users/user-account-settings',
-        element: <AccountSetting />,
-    },
+
     // pages
     {
         path: '/pages/knowledge-base',

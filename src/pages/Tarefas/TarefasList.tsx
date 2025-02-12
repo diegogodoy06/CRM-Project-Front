@@ -279,10 +279,10 @@ const NegociacoesList = () => {
                     <button
                         type="button"
                         className="btn btn-primary"
-                        //onClick={() => {
-                        //    addEditProject();
-                        //}}
-                        >
+                    //onClick={() => {
+                    //    addEditProject();
+                    //}}
+                    >
                         <IconPlus className="w-5 h-5 ltr:mr-3 rtl:ml-3" />
                         Adicionar
                     </button>
@@ -425,7 +425,7 @@ const NegociacoesList = () => {
                     </div>
                 </div>
             )}
-            
+
             <div className="flex gap-5 relative sm:h-[calc(100vh_-_150px)] h-full">
                 <div className={`overlay bg-black/60 z-[5] w-full h-full rounded-md absolute hidden ${isShowTaskMenu && '!block xl:!hidden'}`} onClick={() => setIsShowTaskMenu(!isShowTaskMenu)}></div>
 
@@ -516,18 +516,18 @@ const NegociacoesList = () => {
                                                                         button={
                                                                             <span
                                                                                 className={`badge rounded-full capitalize hover:top-0 hover:text-white ${task.priority === 'medium'
-                                                                                        ? 'badge-outline-primary hover:bg-primary'
-                                                                                        : task.priority === 'low'
-                                                                                            ? 'badge-outline-warning hover:bg-warning'
-                                                                                            : task.priority === 'high'
-                                                                                                ? 'badge-outline-danger hover:bg-danger'
-                                                                                                : task.priority === 'medium' && isPriorityMenu === task.id
-                                                                                                    ? 'text-white bg-primary'
-                                                                                                    : task.priority === 'low' && isPriorityMenu === task.id
-                                                                                                        ? 'text-white bg-warning'
-                                                                                                        : task.priority === 'high' && isPriorityMenu === task.id
-                                                                                                            ? 'text-white bg-danger'
-                                                                                                            : ''
+                                                                                    ? 'badge-outline-primary hover:bg-primary'
+                                                                                    : task.priority === 'low'
+                                                                                        ? 'badge-outline-warning hover:bg-warning'
+                                                                                        : task.priority === 'high'
+                                                                                            ? 'badge-outline-danger hover:bg-danger'
+                                                                                            : task.priority === 'medium' && isPriorityMenu === task.id
+                                                                                                ? 'text-white bg-primary'
+                                                                                                : task.priority === 'low' && isPriorityMenu === task.id
+                                                                                                    ? 'text-white bg-warning'
+                                                                                                    : task.priority === 'high' && isPriorityMenu === task.id
+                                                                                                        ? 'text-white bg-danger'
+                                                                                                        : ''
                                                                                     }`}
                                                                             >
                                                                                 {task.priority}
@@ -576,14 +576,14 @@ const NegociacoesList = () => {
                                                                         button={
                                                                             <span
                                                                                 className={`badge rounded-full capitalize hover:top-0 hover:text-white ${task.tag === 'team'
-                                                                                        ? 'badge-outline-success hover:bg-success'
-                                                                                        : task.tag === 'update'
-                                                                                            ? 'badge-outline-info hover:bg-info'
-                                                                                            : task.tag === 'team' && isTagMenu === task.id
-                                                                                                ? 'text-white bg-success '
-                                                                                                : task.tag === 'update' && isTagMenu === task.id
-                                                                                                    ? 'text-white bg-info '
-                                                                                                    : ''
+                                                                                    ? 'badge-outline-success hover:bg-success'
+                                                                                    : task.tag === 'update'
+                                                                                        ? 'badge-outline-info hover:bg-info'
+                                                                                        : task.tag === 'team' && isTagMenu === task.id
+                                                                                            ? 'text-white bg-success '
+                                                                                            : task.tag === 'update' && isTagMenu === task.id
+                                                                                                ? 'text-white bg-info '
+                                                                                                : ''
                                                                                     }`}
                                                                             >
                                                                                 {task.tag}
@@ -844,12 +844,12 @@ const NegociacoesList = () => {
                                             {selectedTask.priority && (
                                                 <div
                                                     className={`badge rounded-3xl capitalize ${selectedTask.priority === 'medium'
-                                                            ? 'badge-outline-primary'
-                                                            : selectedTask.priority === 'low'
-                                                                ? 'badge-outline-warning '
-                                                                : selectedTask.priority === 'high'
-                                                                    ? 'badge-outline-danger '
-                                                                    : ''
+                                                        ? 'badge-outline-primary'
+                                                        : selectedTask.priority === 'low'
+                                                            ? 'badge-outline-warning '
+                                                            : selectedTask.priority === 'high'
+                                                                ? 'badge-outline-danger '
+                                                                : ''
                                                         }`}
                                                 >
                                                     {selectedTask.priority}
@@ -879,10 +879,7 @@ const NegociacoesList = () => {
                     </Dialog>
                 </Transition>
             </div>
-
-
-
-
+            
         </div>
     );
 };
