@@ -222,7 +222,6 @@ const AccountSetting = () => {
               </div>
             </section>
 
-
             {/* Seção: Assinatura de Email */}
             <section className="p-4 border border-[#ebedf2] dark:border-[#191e3a] rounded-md bg-white dark:bg-black">
               <h6 className="text-lg font-bold mb-4">Assinatura de Email</h6>
