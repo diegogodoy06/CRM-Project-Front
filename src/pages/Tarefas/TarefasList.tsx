@@ -1,5 +1,4 @@
 import { useState, useEffect, Fragment } from 'react';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import Swal from 'sweetalert2';
 import { Dialog, Transition } from '@headlessui/react';
 import ReactQuill from 'react-quill';
@@ -8,13 +7,10 @@ import Dropdown from '../../components/Dropdown';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '../../store';
 import { setPageTitle } from '../../store/themeConfigSlice';
-import IconClipboardText from '../../components/Icon/IconClipboardText';
+import { useNavigate } from "react-router-dom";
+
 import IconListCheck from '../../components/Icon/IconListCheck';
-import IconThumbUp from '../../components/Icon/IconThumbUp';
-import IconStar from '../../components/Icon/IconStar';
 import IconTrashLines from '../../components/Icon/IconTrashLines';
-import IconSquareRotated from '../../components/Icon/IconSquareRotated';
-import IconPlus from '../../components/Icon/IconPlus';
 import IconSearch from '../../components/Icon/IconSearch';
 import IconMenu from '../../components/Icon/IconMenu';
 import IconCaretDown from '../../components/Icon/IconCaretDown';
@@ -23,10 +19,10 @@ import IconHorizontalDots from '../../components/Icon/IconHorizontalDots';
 import IconPencilPaper from '../../components/Icon/IconPencilPaper';
 import IconX from '../../components/Icon/IconX';
 import IconRestore from '../../components/Icon/IconRestore';
-
-import { useNavigate } from "react-router-dom";
 import IconChecks from '../../components/Icon/IconChecks';
 import IconFilter from '../../components/Icon/IconFilter';
+import IconStar from '../../components/Icon/IconStar';
+import IconPlus from '../../components/Icon/IconPlus';
 
 
 const NegociacoesList = () => {
@@ -879,7 +875,7 @@ const NegociacoesList = () => {
                     </Dialog>
                 </Transition>
             </div>
-            
+
         </div>
     );
 };
