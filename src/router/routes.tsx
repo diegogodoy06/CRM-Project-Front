@@ -1,5 +1,6 @@
 import path from 'path';
 import { lazy } from 'react';
+import { redirect } from 'react-router-dom';
 
 const Analytics = lazy(() => import('../pages/Analytics'));
 const Finance = lazy(() => import('../pages/Finance'));
@@ -62,8 +63,8 @@ const Checkbox = lazy(() => import('../pages/DataTables/Checkbox'));
 const RangeSearch = lazy(() => import('../pages/DataTables/RangeSearch'));
 const Export = lazy(() => import('../pages/DataTables/Export'));
 const ColumnChooser = lazy(() => import('../pages/DataTables/ColumnChooser'));
-const Profile = lazy(() => import('../pages/Users/Profile'));
-const AccountSetting = lazy(() => import('../pages/Users/AccountSetting'));
+const Profile = lazy(() => import('../pages/Excluir/Profile'));
+const UsersProfile = lazy(() => import('../pages/Users/UsersProfile'));
 const KnowledgeBase = lazy(() => import('../pages/Pages/KnowledgeBase'));
 const ContactUsBoxed = lazy(() => import('../pages/Pages/ContactUsBoxed'));
 const ContactUsCover = lazy(() => import('../pages/Pages/ContactUsCover'));
@@ -74,14 +75,14 @@ const ERROR404 = lazy(() => import('../pages/Pages/Error404'));
 const ERROR500 = lazy(() => import('../pages/Pages/Error500'));
 const ERROR503 = lazy(() => import('../pages/Pages/Error503'));
 const Maintenence = lazy(() => import('../pages/Pages/Maintenence'));
-const LoginBoxed = lazy(() => import('../pages/Authentication/LoginBoxed'));
-const RegisterBoxed = lazy(() => import('../pages/Authentication/RegisterBoxed'));
-const UnlockBoxed = lazy(() => import('../pages/Authentication/UnlockBox'));
-const RecoverIdBoxed = lazy(() => import('../pages/Authentication/RecoverIdBox'));
-const LoginCover = lazy(() => import('../pages/Authentication/LoginCover'));
-const RegisterCover = lazy(() => import('../pages/Authentication/RegisterCover'));
-const RecoverIdCover = lazy(() => import('../pages/Authentication/RecoverIdCover'));
-const UnlockCover = lazy(() => import('../pages/Authentication/UnlockCover'));
+const LoginBoxed = lazy(() => import('../pages/Excluir/LoginBoxed'));
+const RegisterBoxed = lazy(() => import('../pages/Excluir/RegisterBoxed'));
+const UnlockBoxed = lazy(() => import('../pages/Excluir/UnlockBox'));
+const RecoverIdBoxed = lazy(() => import('../pages/Excluir/RecoverIdBox'));
+const LoginCover = lazy(() => import('../pages/Authentication/Login'));
+const RegisterCover = lazy(() => import('../pages/Excluir/RegisterCover'));
+const RecoverIdCover = lazy(() => import('../pages/Excluir/RecoverIdCover'));
+const UnlockCover = lazy(() => import('../pages/Excluir/UnlockCover'));
 const About = lazy(() => import('../pages/About'));
 const Error = lazy(() => import('../components/Error'));
 const Charts = lazy(() => import('../pages/Charts'));
@@ -109,12 +110,15 @@ const NegociacoesList = lazy(() => import('../pages/Negociacoes/NegociacoesList'
 
 const EmpresasList = lazy(() => import('../pages/Empresas/EmpresasList'));
 const ContatosList = lazy(() => import('../pages/Contatos/ContatosList'));
-const Login = lazy(() => import('../pages/Auth/Login'));
+
+const TarefasList = lazy(() => import('../pages/Tarefas/TarefasList'));
+const TarefasCalendar = lazy(() => import('../pages/Tarefas/TarefasCalendar'));
 
 const routes = [
     // dashboard
     {
         path: '/',
+       // redirectTo: '/neg/list',
         element: <NegociacoesBoard />,
     },
     {
@@ -124,6 +128,7 @@ const routes = [
     {
         path: '/neg/list',
         element: <NegociacoesList />,
+
     },
 
 
@@ -138,13 +143,19 @@ const routes = [
         element: <ContatosList />,
     },
 
-
     {
-        path: '/auth/login',
-        Element : <Login />,
-        layout: 'blank',
+        path: '/tsk/list',
+        element: <TarefasList />,
+    },
+    {
+        path: '/tsk/calendar',
+        element: <TarefasCalendar />,
     },
 
+    {
+        path: '/users/profile',
+        element: <UsersProfile />,
+    },
 
     {/*------------------------------------------------*/ },
 
@@ -413,13 +424,10 @@ const routes = [
     },
     // Users page
     {
-        path: '/users/profile',
+        path: '/users/settings',
         element: <Profile />,
     },
-    {
-        path: '/users/user-account-settings',
-        element: <AccountSetting />,
-    },
+
     // pages
     {
         path: '/pages/knowledge-base',
@@ -491,7 +499,7 @@ const routes = [
         layout: 'blank',
     },
     {
-        path: '/auth/cover-login',
+        path: '/auth/login',
         element: <LoginCover />,
         layout: 'blank',
     },
