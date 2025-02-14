@@ -4,7 +4,7 @@ import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import {
   Button,
-  Input,
+  TextInput,
   Select,
   Skeleton,
   Drawer,
@@ -13,8 +13,19 @@ import {
 import sortBy from 'lodash/sortBy';
 import IconFilter from '../../components/Icon/IconFilter';
 
+// Define a interface para a Empresa
+interface Empresa {
+  id: number;
+  name: string;
+  cnpj: string;
+  address: string;
+  phone: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
 // Dados simulados para as empresas
-const rowData = [
+const rowData: Empresa[] = [
   {
     id: 1,
     name: 'Steelbras',
@@ -36,7 +47,7 @@ const rowData = [
 ];
 
 const EmpresasList = () => {
-  // Utiliza o dispatch para atualizar o título da página
+  // Atualiza o título da página
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setPageTitle(''));
@@ -48,8 +59,8 @@ const EmpresasList = () => {
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
 
   // Estados para armazenar os registros da tabela
-  const [initialRecords, setInitialRecords] = useState([]); // Registros iniciais já ordenados
-  const [recordsData, setRecordsData] = useState([]); // Registros que serão exibidos
+  const [initialRecords, setInitialRecords] = useState<Empresa[]>([]);
+  const [recordsData, setRecordsData] = useState<Empresa[]>([]);
 
   // Estados para controle de busca, ordenação e filtros
   const [search, setSearch] = useState('');
@@ -90,13 +101,13 @@ const EmpresasList = () => {
     if (!loading) {
       const filteredData = rowData.filter((record) => {
         return (
-          // Aplica filtro pelo status, se definido
+          // Filtro pelo status, se definido
           (statusFilter
             ? statusFilter === 'ativo'
               ? record.isActive
               : !record.isActive
             : true) &&
-          // Aplica filtro de busca em nome, CNPJ ou telefone
+          // Filtro de busca em nome, CNPJ ou telefone
           (record.name.toLowerCase().includes(search.toLowerCase()) ||
             record.cnpj.includes(search) ||
             record.phone.toLowerCase().includes(search.toLowerCase()))
@@ -136,7 +147,7 @@ const EmpresasList = () => {
   // Simula a importação de empresas
   const handleImportClick = () => {
     console.log('Importar empresas...');
-    // Adicione aqui a lógica de importação, se necessário
+    // Lógica de importação, se necessário
   };
 
   // Formata a data para o padrão pt-BR
@@ -151,7 +162,6 @@ const EmpresasList = () => {
   // Trata o envio do formulário de criação de empresa
   const handleSubmitCreateEmpresa = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Aqui você pode implementar a lógica de validação e envio dos dados para o backend
     console.log('Dados da nova empresa:', {
       empNome,
       empCPF,
@@ -188,10 +198,7 @@ const EmpresasList = () => {
       <div className="flex gap-4 items-center px-4 border mb-4">
         {/* Filtro Funil */}
         <div className="flex items-center gap-2 p-1 rounded-md flex-1">
-          <label
-            className="text-sm font-medium whitespace-nowrap flex items-center"
-            style={{ marginBottom: '0px' }}
-          >
+          <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: '0px' }}>
             Funil:
           </label>
           <select className="form-select text-white-dark">
@@ -204,10 +211,7 @@ const EmpresasList = () => {
 
         {/* Filtro Responsável */}
         <div className="flex items-center gap-2 p-2 rounded-md flex-1">
-          <label
-            className="text-sm font-medium whitespace-nowrap flex items-center"
-            style={{ marginBottom: '0px' }}
-          >
+          <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: '0px' }}>
             Responsável:
           </label>
           <select className="form-select text-white-dark">
@@ -220,13 +224,13 @@ const EmpresasList = () => {
 
         {/* Filtro Status */}
         <div className="flex items-center gap-2 p-2 rounded-md flex-1">
-          <label
-            className="text-sm font-medium whitespace-nowrap flex items-center"
-            style={{ marginBottom: '0px' }}
-          >
+          <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: '0px' }}>
             Status:
           </label>
-          <select className="form-select text-white-dark">
+          <select
+            className="form-select text-white-dark"
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
             <option value="">Todos</option>
             <option value="ativo">Ativo</option>
             <option value="inativo">Inativo</option>
@@ -235,10 +239,7 @@ const EmpresasList = () => {
 
         {/* Filtro Ordem */}
         <div className="flex items-center gap-2 p-2 rounded-md flex-1">
-          <label
-            className="text-sm font-medium whitespace-nowrap flex items-center"
-            style={{ marginBottom: '0px' }}
-          >
+          <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: '0px' }}>
             Ordem:
           </label>
           <select className="form-select text-white-dark">
@@ -251,11 +252,7 @@ const EmpresasList = () => {
         </div>
 
         {/* Botão para abrir os filtros avançados */}
-        <button
-          type="button"
-          className="btn btn-primary flex items-center"
-          onClick={toggleFilterModal}
-        >
+        <button type="button" className="btn btn-primary flex items-center" onClick={toggleFilterModal}>
           <IconFilter className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
           Filtrar ({activeFilters})
         </button>
@@ -265,39 +262,29 @@ const EmpresasList = () => {
       {isFilterModalOpen && (
         <div className="fixed inset-0 z-50 flex">
           {/* Área para fechar o modal ao clicar fora */}
-          <div
-            className="bg-gray-800 bg-opacity-50 flex-1"
-            onClick={toggleFilterModal}
-          ></div>
+          <div className="bg-gray-800 bg-opacity-50 flex-1" onClick={toggleFilterModal}></div>
           <div className="bg-white w-80 p-5 shadow-lg">
             <h2 className="text-lg font-semibold mb-4">Filtros Avançados</h2>
             <form>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">CNPJ</label>
-                <Input
-                  type="text"
-                  className="w-full"
+                <TextInput
                   placeholder="Digite o CNPJ"
+                  className="w-full"
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Nome da Empresa
-                </label>
-                <Input
-                  type="text"
-                  className="w-full"
+                <label className="block text-sm font-medium mb-2">Nome da Empresa</label>
+                <TextInput
                   placeholder="Digite o nome"
+                  className="w-full"
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">
-                  Telefone
-                </label>
-                <Input
-                  type="text"
-                  className="w-full"
+                <label className="block text-sm font-medium mb-2">Telefone</label>
+                <TextInput
                   placeholder="Telefone"
+                  className="w-full"
                 />
               </div>
               <Button className="btn btn-primary" fullWidth variant="filled">
@@ -370,11 +357,10 @@ const EmpresasList = () => {
         position="right"
         size="md"
       >
-        {/* Formulário para criação de empresa com os campos do banco */}
+        {/* Formulário para criação de empresa */}
         <form onSubmit={handleSubmitCreateEmpresa}>
-          {/* Nome da Empresa (obrigatório) */}
           <div className="mb-4">
-            <Input
+            <TextInput
               label="Nome da Empresa"
               placeholder="Digite o nome da empresa"
               value={empNome}
@@ -382,34 +368,30 @@ const EmpresasList = () => {
               required
             />
           </div>
-          {/* CPF (opcional) */}
           <div className="mb-4">
-            <Input
+            <TextInput
               label="CPF"
               placeholder="Digite o CPF"
               value={empCPF}
               onChange={(e) => setEmpCPF(e.target.value)}
             />
           </div>
-          {/* CNPJ (opcional) */}
           <div className="mb-4">
-            <Input
+            <TextInput
               label="CNPJ"
               placeholder="Digite o CNPJ"
               value={empCNPJ}
               onChange={(e) => setEmpCNPJ(e.target.value)}
             />
           </div>
-          {/* URL (opcional) */}
           <div className="mb-4">
-            <Input
+            <TextInput
               label="URL"
               placeholder="Digite a URL"
               value={empURL}
               onChange={(e) => setEmpURL(e.target.value)}
             />
           </div>
-          {/* Descrição (opcional) */}
           <div className="mb-4">
             <Textarea
               label="Descrição"
@@ -418,9 +400,8 @@ const EmpresasList = () => {
               onChange={(e) => setEmpDescricao(e.target.value)}
             />
           </div>
-          {/* ID Endereço (obrigatório) */}
           <div className="mb-4">
-            <Input
+            <TextInput
               label="ID Endereço"
               placeholder="Digite o ID do endereço"
               value={cidEnderecoID}
@@ -429,14 +410,9 @@ const EmpresasList = () => {
             />
           </div>
           <div className="flex justify-end gap-2">
-            {/* Botão para cancelar a criação */}
-            <Button
-              variant="outline"
-              onClick={() => setIsCreateModalOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setIsCreateModalOpen(false)}>
               Cancelar
             </Button>
-            {/* Botão para submeter o formulário */}
             <Button type="submit" variant="filled">
               Criar Empresa
             </Button>
