@@ -47,6 +47,7 @@
         "react-export-table-to-excel": "^1.0.6",
         "react-flatpickr": "^3.10.13",
         "react-images-uploading": "^3.1.7",
+        "react-input-mask": "^2.0.4",
         "react-loading-skeleton": "^3.5.0",
         "react-popper": "^2.3.0",
         "react-quill": "^2.0.0",
