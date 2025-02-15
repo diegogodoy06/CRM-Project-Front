@@ -9,6 +9,9 @@ import {
   Skeleton,
   Drawer,
   Textarea,
+  Group,
+  Stack,
+  MultiSelect,
 } from '@mantine/core';
 import sortBy from 'lodash/sortBy';
 import IconFilter from '../../components/Icon/IconFilter';
@@ -47,67 +50,70 @@ const rowData: Empresa[] = [
 ];
 
 const EmpresasList = () => {
-  // Atualiza o título da página
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(setPageTitle(''));
   }, [dispatch]);
 
-  // Estados para paginação
+  /** Estados para paginação, busca, ordenação e filtros */
   const [page, setPage] = useState(1);
   const PAGE_SIZES = [10, 20, 30, 50, 100];
   const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
-
-  // Estados para armazenar os registros da tabela
   const [initialRecords, setInitialRecords] = useState<Empresa[]>([]);
   const [recordsData, setRecordsData] = useState<Empresa[]>([]);
-
-  // Estados para controle de busca, ordenação e filtros
   const [search, setSearch] = useState('');
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({
     columnAccessor: 'name',
     direction: 'asc',
   });
   const [statusFilter, setStatusFilter] = useState<string | null>('');
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState(0);
 
-  // Estado para gerenciar o carregamento dos dados
+  /** Estado de loading */
   const [loading, setLoading] = useState(true);
 
-  // Estados para gerenciar o modal de criação de empresa
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  // Estados para os campos do formulário de criação
-  const [empNome, setEmpNome] = useState('');
-  const [empCPF, setEmpCPF] = useState('');
-  const [empCNPJ, setEmpCNPJ] = useState('');
-  const [empURL, setEmpURL] = useState('');
-  const [empDescricao, setEmpDescricao] = useState('');
-  const [cidEnderecoID, setCidEnderecoID] = useState('');
+  // Modal de filtros avançados
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const toggleFilterModal = () => {
+    setIsFilterModalOpen(!isFilterModalOpen);
+  };
 
-  // Simula a requisição dos dados com um delay de 2 segundos
+  // Modal de criação de empresa
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const handleCreateCompany = () => {
+    setIsCreateModalOpen(true);
+  };
+
+  // Estados para os campos do modal de criação de empresa
+  const [empNome, setEmpNome] = useState('');
+  const [empSegmento, setEmpSegmento] = useState('');
+  const [empURL, setEmpURL] = useState('');
+  // Para o campo "Resumo": selecionar CPF ou CNPJ e inserir o número
+  const [empIdType, setEmpIdType] = useState('');
+  const [empIdValue, setEmpIdValue] = useState('');
+
+  // Simula a requisição dos dados com delay de 2 segundos
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
-      const sortedData = sortBy(rowData, 'name'); // Ordena os dados por nome
+      const sortedData = sortBy(rowData, 'name');
       setInitialRecords(sortedData);
       setRecordsData(sortedData);
       setLoading(false);
     }, 2000);
   }, []);
 
-  // Aplica filtros de busca e status nos registros
+  // Aplica filtros de busca e status
   useEffect(() => {
     if (!loading) {
       const filteredData = rowData.filter((record) => {
         return (
-          // Filtro pelo status, se definido
           (statusFilter
             ? statusFilter === 'ativo'
               ? record.isActive
               : !record.isActive
             : true) &&
-          // Filtro de busca em nome, CNPJ ou telefone
           (record.name.toLowerCase().includes(search.toLowerCase()) ||
             record.cnpj.includes(search) ||
             record.phone.toLowerCase().includes(search.toLowerCase()))
@@ -134,20 +140,9 @@ const EmpresasList = () => {
     }
   }, [sortStatus, initialRecords, loading]);
 
-  // Alterna a visibilidade do modal de filtros avançados
-  const toggleFilterModal = () => {
-    setIsFilterModalOpen(!isFilterModalOpen);
-  };
-
-  // Abre o modal de criação de empresa
-  const handleCreateCompany = () => {
-    setIsCreateModalOpen(true);
-  };
-
   // Simula a importação de empresas
   const handleImportClick = () => {
     console.log('Importar empresas...');
-    // Lógica de importação, se necessário
   };
 
   // Formata a data para o padrão pt-BR
@@ -164,20 +159,57 @@ const EmpresasList = () => {
     e.preventDefault();
     console.log('Dados da nova empresa:', {
       empNome,
-      empCPF,
-      empCNPJ,
+      empSegmento,
       empURL,
-      empDescricao,
-      cidEnderecoID,
+      empIdType,
+      empIdValue,
     });
     // Após o envio, reseta os campos e fecha o modal
     setEmpNome('');
-    setEmpCPF('');
-    setEmpCNPJ('');
+    setEmpSegmento('');
     setEmpURL('');
-    setEmpDescricao('');
-    setCidEnderecoID('');
+    setEmpIdType('');
+    setEmpIdValue('');
     setIsCreateModalOpen(false);
+  };
+
+  // Estados para os filtros do modal de filtragem (atualizados conforme solicitado)
+  const [filterEmpNome, setFilterEmpNome] = useState('');
+  const [filterDataCriacao, setFilterDataCriacao] = useState('');
+  const [filterDataUltimoContato, setFilterDataUltimoContato] = useState('');
+  const [filterSegmento, setFilterSegmento] = useState('');
+  const [filterQtdTotalNegociacoesFrom, setFilterQtdTotalNegociacoesFrom] = useState('');
+  const [filterQtdTotalNegociacoesTo, setFilterQtdTotalNegociacoesTo] = useState('');
+  const [filterQtdNegociacoesEmAndamentoFrom, setFilterQtdNegociacoesEmAndamentoFrom] = useState('');
+  const [filterQtdNegociacoesEmAndamentoTo, setFilterQtdNegociacoesEmAndamentoTo] = useState('');
+  const [filterQtdNegociacoesVendidasFrom, setFilterQtdNegociacoesVendidasFrom] = useState('');
+  const [filterQtdNegociacoesVendidasTo, setFilterQtdNegociacoesVendidasTo] = useState('');
+  const [filterQtdNegociacoesPerdidasFrom, setFilterQtdNegociacoesPerdidasFrom] = useState('');
+  const [filterQtdNegociacoesPerdidasTo, setFilterQtdNegociacoesPerdidasTo] = useState('');
+  const [filterQtdNegociacoesPausadasFrom, setFilterQtdNegociacoesPausadasFrom] = useState('');
+  const [filterQtdNegociacoesPausadasTo, setFilterQtdNegociacoesPausadasTo] = useState('');
+
+  // Trata o envio dos filtros do modal
+  const handleApplyFilters = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log('Aplicar filtros:', {
+      filterEmpNome,
+      filterDataCriacao,
+      filterDataUltimoContato,
+      filterSegmento,
+      filterQtdTotalNegociacoesFrom,
+      filterQtdTotalNegociacoesTo,
+      filterQtdNegociacoesEmAndamentoFrom,
+      filterQtdNegociacoesEmAndamentoTo,
+      filterQtdNegociacoesVendidasFrom,
+      filterQtdNegociacoesVendidasTo,
+      filterQtdNegociacoesPerdidasFrom,
+      filterQtdNegociacoesPerdidasTo,
+      filterQtdNegociacoesPausadasFrom,
+      filterQtdNegociacoesPausadasTo,
+    });
+    // Aqui você aplicaria os filtros à tabela
+    setIsFilterModalOpen(false);
   };
 
   return (
@@ -198,7 +230,7 @@ const EmpresasList = () => {
       <div className="flex gap-4 items-center px-4 border mb-4">
         {/* Filtro Funil */}
         <div className="flex items-center gap-2 p-1 rounded-md flex-1">
-          <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: '0px' }}>
+          <label className="text-sm font-medium whitespace-nowrap">
             Funil:
           </label>
           <select className="form-select text-white-dark">
@@ -211,7 +243,7 @@ const EmpresasList = () => {
 
         {/* Filtro Responsável */}
         <div className="flex items-center gap-2 p-2 rounded-md flex-1">
-          <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: '0px' }}>
+          <label className="text-sm font-medium whitespace-nowrap">
             Responsável:
           </label>
           <select className="form-select text-white-dark">
@@ -224,7 +256,7 @@ const EmpresasList = () => {
 
         {/* Filtro Status */}
         <div className="flex items-center gap-2 p-2 rounded-md flex-1">
-          <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: '0px' }}>
+          <label className="text-sm font-medium whitespace-nowrap">
             Status:
           </label>
           <select
@@ -239,7 +271,7 @@ const EmpresasList = () => {
 
         {/* Filtro Ordem */}
         <div className="flex items-center gap-2 p-2 rounded-md flex-1">
-          <label className="text-sm font-medium whitespace-nowrap flex items-center" style={{ marginBottom: '0px' }}>
+          <label className="text-sm font-medium whitespace-nowrap">
             Ordem:
           </label>
           <select className="form-select text-white-dark">
@@ -252,53 +284,215 @@ const EmpresasList = () => {
         </div>
 
         {/* Botão para abrir os filtros avançados */}
-        <button type="button" className="btn btn-primary flex items-center" onClick={toggleFilterModal}>
+        <Button type="button" variant="outline" onClick={toggleFilterModal}>
           <IconFilter className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
           Filtrar ({activeFilters})
-        </button>
+        </Button>
       </div>
 
-      {/* Modal Lateral para filtros avançados */}
-      {isFilterModalOpen && (
-        <div className="fixed inset-0 z-50 flex">
-          {/* Área para fechar o modal ao clicar fora */}
-          <div className="bg-gray-800 bg-opacity-50 flex-1" onClick={toggleFilterModal}></div>
-          <div className="bg-white w-80 p-5 shadow-lg">
-            <h2 className="text-lg font-semibold mb-4">Filtros Avançados</h2>
-            <form>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">CNPJ</label>
+      {/* Modal de filtragem (Drawer) com footer fixo */}
+      <Drawer
+        opened={isFilterModalOpen}
+        onClose={() => setIsFilterModalOpen(false)}
+        title={<h1 style={{ margin: 0 }}>Filtrar Empresas</h1>}
+        padding="xl"
+        size="md"
+        position="right"
+        overlayOpacity={0.55}
+        overlayBlur={0}
+        styles={{
+          drawer: { maxWidth: '400px', width: '100%' },
+          header: {
+            backgroundColor: '#fff',
+            padding: '1rem',
+            borderBottom: '1px solid #ddd',
+          },
+          body: {
+            overflowY: 'auto',
+            maxHeight: 'calc(100vh - 120px)',
+            paddingBottom: '100px',
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#888 #e0e0e0',
+          },
+        }}
+      >
+        <form id="filterForm" onSubmit={handleApplyFilters}>
+          <Stack spacing="md">
+            <TextInput
+              label="Nome da Empresa"
+              placeholder="Digite o nome da empresa"
+              value={filterEmpNome}
+              onChange={(e) => setFilterEmpNome(e.target.value)}
+            />
+            <TextInput
+              label="Data de Criação"
+              placeholder="Selecione a data"
+              type="date"
+              value={filterDataCriacao}
+              onChange={(e) => setFilterDataCriacao(e.target.value)}
+            />
+            <TextInput
+              label="Data do Último Contato"
+              placeholder="Selecione a data"
+              type="date"
+              value={filterDataUltimoContato}
+              onChange={(e) => setFilterDataUltimoContato(e.target.value)}
+            />
+            <Select
+              label="Segmento"
+              placeholder="Selecionar"
+              data={[
+                { value: 'tecnologia', label: 'Tecnologia' },
+                { value: 'industria', label: 'Indústria' },
+                { value: 'servicos', label: 'Serviços' },
+                { value: 'outro', label: 'Outro' },
+              ]}
+              value={filterSegmento}
+              onChange={(value) => setFilterSegmento(value || '')}
+            />
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Qtd Total de Negociações
+              </label>
+              <Group noWrap>
                 <TextInput
-                  placeholder="Digite o CNPJ"
-                  className="w-full"
+                  placeholder="De"
+                  type="number"
+                  value={filterQtdTotalNegociacoesFrom}
+                  onChange={(e) =>
+                    setFilterQtdTotalNegociacoesFrom(e.target.value)
+                  }
                 />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Nome da Empresa</label>
                 <TextInput
-                  placeholder="Digite o nome"
-                  className="w-full"
+                  placeholder="Até"
+                  type="number"
+                  value={filterQtdTotalNegociacoesTo}
+                  onChange={(e) =>
+                    setFilterQtdTotalNegociacoesTo(e.target.value)
+                  }
                 />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Telefone</label>
+              </Group>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Negociações em Andamento
+              </label>
+              <Group noWrap>
                 <TextInput
-                  placeholder="Telefone"
-                  className="w-full"
+                  placeholder="De"
+                  type="number"
+                  value={filterQtdNegociacoesEmAndamentoFrom}
+                  onChange={(e) =>
+                    setFilterQtdNegociacoesEmAndamentoFrom(e.target.value)
+                  }
                 />
-              </div>
-              <Button className="btn btn-primary" fullWidth variant="filled">
-                Aplicar Filtros
-              </Button>
-            </form>
-          </div>
+                <TextInput
+                  placeholder="Até"
+                  type="number"
+                  value={filterQtdNegociacoesEmAndamentoTo}
+                  onChange={(e) =>
+                    setFilterQtdNegociacoesEmAndamentoTo(e.target.value)
+                  }
+                />
+              </Group>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Negociações Vendidas
+              </label>
+              <Group noWrap>
+                <TextInput
+                  placeholder="De"
+                  type="number"
+                  value={filterQtdNegociacoesVendidasFrom}
+                  onChange={(e) =>
+                    setFilterQtdNegociacoesVendidasFrom(e.target.value)
+                  }
+                />
+                <TextInput
+                  placeholder="Até"
+                  type="number"
+                  value={filterQtdNegociacoesVendidasTo}
+                  onChange={(e) =>
+                    setFilterQtdNegociacoesVendidasTo(e.target.value)
+                  }
+                />
+              </Group>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Negociações Perdidas
+              </label>
+              <Group noWrap>
+                <TextInput
+                  placeholder="De"
+                  type="number"
+                  value={filterQtdNegociacoesPerdidasFrom}
+                  onChange={(e) =>
+                    setFilterQtdNegociacoesPerdidasFrom(e.target.value)
+                  }
+                />
+                <TextInput
+                  placeholder="Até"
+                  type="number"
+                  value={filterQtdNegociacoesPerdidasTo}
+                  onChange={(e) =>
+                    setFilterQtdNegociacoesPerdidasTo(e.target.value)
+                  }
+                />
+              </Group>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Negociações Pausadas
+              </label>
+              <Group noWrap>
+                <TextInput
+                  placeholder="De"
+                  type="number"
+                  value={filterQtdNegociacoesPausadasFrom}
+                  onChange={(e) =>
+                    setFilterQtdNegociacoesPausadasFrom(e.target.value)
+                  }
+                />
+                <TextInput
+                  placeholder="Até"
+                  type="number"
+                  value={filterQtdNegociacoesPausadasTo}
+                  onChange={(e) =>
+                    setFilterQtdNegociacoesPausadasTo(e.target.value)
+                  }
+                />
+              </Group>
+            </div>
+          </Stack>
+        </form>
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#fff',
+            padding: '16px',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: '8px',
+            borderTop: '1px solid #ddd',
+          }}
+        >
+          <Button variant="outline" onClick={toggleFilterModal}>
+            Cancelar
+          </Button>
+          <Button className="btn btn-primary" type="submit" form="filterForm">
+            Aplicar Filtro
+          </Button>
         </div>
-      )}
+      </Drawer>
 
       {/* Seção da tabela ou do skeleton de carregamento */}
       <div className="panel datatables">
         {loading ? (
-          // Skeleton que reflete a estrutura da tabela
           <div>
             {[...Array(5)].map((_, index) => (
               <div key={index} className="flex justify-between gap-4 mb-2">
@@ -348,72 +542,93 @@ const EmpresasList = () => {
         )}
       </div>
 
-      {/* Modal lateral para criação de empresa */}
+      {/* Modal para criação de empresa (refeito como na página de contatos) */}
       <Drawer
         opened={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         title="Criar Empresa"
         padding="xl"
         position="right"
-        size="md"
+        size="lg"
+        overlayOpacity={0.55}
+        overlayBlur={0}
+        styles={{
+          drawer: { maxWidth: '600px', width: '100%' },
+          header: {
+            backgroundColor: '#fff',
+            padding: '1rem',
+            borderBottom: '1px solid #ddd',
+          },
+        }}
       >
-        {/* Formulário para criação de empresa */}
-        <form onSubmit={handleSubmitCreateEmpresa}>
-          <div className="mb-4">
+        <form
+          id="createCompanyForm"
+          onSubmit={handleSubmitCreateEmpresa}
+          style={{ position: 'relative', paddingBottom: '80px' }} // espaço para o footer fixo
+        >
+          <Stack spacing="md">
             <TextInput
-              label="Nome da Empresa"
+              label="Nome da Empresa *"
               placeholder="Digite o nome da empresa"
               value={empNome}
               onChange={(e) => setEmpNome(e.target.value)}
               required
             />
-          </div>
-          <div className="mb-4">
-            <TextInput
-              label="CPF"
-              placeholder="Digite o CPF"
-              value={empCPF}
-              onChange={(e) => setEmpCPF(e.target.value)}
+            <Select
+              label="Segmento"
+              placeholder="Selecionar"
+              data={[
+                { value: 'tecnologia', label: 'Tecnologia' },
+                { value: 'industria', label: 'Indústria' },
+                { value: 'servicos', label: 'Serviços' },
+                { value: 'outro', label: 'Outro' },
+              ]}
+              value={empSegmento}
+              onChange={(value) => setEmpSegmento(value || '')}
             />
-          </div>
-          <div className="mb-4">
-            <TextInput
-              label="CNPJ"
-              placeholder="Digite o CNPJ"
-              value={empCNPJ}
-              onChange={(e) => setEmpCNPJ(e.target.value)}
-            />
-          </div>
-          <div className="mb-4">
             <TextInput
               label="URL"
-              placeholder="Digite a URL"
+              placeholder="Digite o endereço do site da empresa"
               value={empURL}
               onChange={(e) => setEmpURL(e.target.value)}
             />
-          </div>
-          <div className="mb-4">
-            <Textarea
-              label="Descrição"
-              placeholder="Digite uma descrição"
-              value={empDescricao}
-              onChange={(e) => setEmpDescricao(e.target.value)}
-            />
-          </div>
-          <div className="mb-4">
-            <TextInput
-              label="ID Endereço"
-              placeholder="Digite o ID do endereço"
-              value={cidEnderecoID}
-              onChange={(e) => setCidEnderecoID(e.target.value)}
-              required
-            />
-          </div>
-          <div className="flex justify-end gap-2">
+            <Group noWrap>
+              <Select
+                label="Identificação"
+                placeholder="Selecionar"
+                data={[
+                  { value: 'CPF', label: 'CPF' },
+                  { value: 'CNPJ', label: 'CNPJ' },
+                ]}
+                value={empIdType}
+                onChange={(value) => setEmpIdType(value || '')}
+                style={{ width: '30%' }}
+                required
+              />
+              <TextInput
+                label="Número"
+                placeholder={empIdType === 'CPF' ? 'Digite o CPF' : 'Digite o CNPJ'}
+                value={empIdValue}
+                onChange={(e) => setEmpIdValue(e.target.value)}
+                style={{ width: '70%' }}
+                required
+              />
+            </Group>
+          </Stack>
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 16,
+              right: 16,
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: '8px',
+            }}
+          >
             <Button variant="outline" onClick={() => setIsCreateModalOpen(false)}>
               Cancelar
             </Button>
-            <Button type="submit" variant="filled">
+            <Button className="btn btn-primary" type="submit" form="createCompanyForm">
               Criar Empresa
             </Button>
           </div>
