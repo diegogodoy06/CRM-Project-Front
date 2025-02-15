@@ -10,6 +10,7 @@ import {
   Group,
   Stack,
   Skeleton,
+  MultiSelect,
 } from '@mantine/core';
 import sortBy from 'lodash/sortBy';
 import IconFilter from '../../components/Icon/IconFilter';
@@ -81,8 +82,22 @@ const Contatos = () => {
   const [email, setEmail] = useState('');
   const [empresaId, setEmpresaId] = useState('');
 
-  // Estado para armazenar um ou mais telefones
+  // Estado para armazenar um ou mais telefones do novo contato
   const [phones, setPhones] = useState([{ type: '', number: '' }]);
+
+  // Função que retorna o ícone de acordo com o tipo de telefone
+  const getPhoneIcon = (type: string) => {
+    switch (type) {
+      case 'celular':
+        return <span role="img" aria-label="celular">📱</span>;
+      case 'fixo':
+        return <span role="img" aria-label="fixo">☎️</span>;
+      case 'comercial':
+        return <span role="img" aria-label="comercial">🏢</span>;
+      default:
+        return <span role="img" aria-label="phone">📞</span>;
+    }
+  };
 
   // Atualiza o valor de um telefone (tipo ou número) conforme o índice
   const handlePhoneChange = (
@@ -97,9 +112,11 @@ const Contatos = () => {
     });
   };
 
-  // Adiciona um novo campo de telefone
+  // Adiciona um novo campo de telefone (limitado a 3)
   const handleAddPhone = () => {
-    setPhones((prevPhones) => [...prevPhones, { type: '', number: '' }]);
+    if (phones.length < 3) {
+      setPhones((prevPhones) => [...prevPhones, { type: '', number: '' }]);
+    }
   };
 
   const handleNewContactSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -129,7 +146,42 @@ const Contatos = () => {
     setIsFilterModalOpen(!isFilterModalOpen);
   };
 
-  /** Lógica de filtragem dos registros */
+  // Estados para os filtros
+  const [filterEmptyFields, setFilterEmptyFields] = useState<string[]>([]);
+  const [filterName, setFilterName] = useState('');
+  const [filterCargo, setFilterCargo] = useState('');
+  // Inicia com apenas UM campo de telefone
+  const [filterPhones, setFilterPhones] = useState<string[]>(['']);
+  const [filterCreationDate, setFilterCreationDate] = useState('');
+  const [filterCompany, setFilterCompany] = useState('');
+
+  const handleFilterPhoneChange = (index: number, value: string) => {
+    setFilterPhones((prevPhones) => {
+      const updatedPhones = [...prevPhones];
+      updatedPhones[index] = value;
+      return updatedPhones;
+    });
+  };
+
+  const handleAddFilterPhone = () => {
+    setFilterPhones((prevPhones) => [...prevPhones, '']);
+  };
+
+  const handleApplyFilters = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log('Aplicar filtros:', {
+      filterEmptyFields,
+      filterName,
+      filterCargo,
+      filterPhones,
+      filterCreationDate,
+      filterCompany,
+    });
+    // Aqui você pode atualizar os critérios de filtro da tabela
+    setIsFilterModalOpen(false);
+  };
+
+  /** Lógica de filtragem dos registros (exemplo simplificado) */
   useEffect(() => {
     const filteredData = rowData.filter((record) => {
       return (
@@ -246,69 +298,124 @@ const Contatos = () => {
         </div>
       </div>
 
-      {/* Modal de filtragem (Drawer) */}
+      {/* Modal de filtragem (Drawer) com footer fixo */}
       <Drawer
         opened={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
-        title={<h2 style={{ margin: 0 }}>Filtrar Contatos</h2>}
+        title={<h1 style={{ margin: 0 }}>Filtrar Contatos</h1>}
         padding="xl"
         size="md"
         position="right"
         overlayOpacity={0.55}
-        overlayBlur={3}
+        overlayBlur={0}
         styles={{
           drawer: { maxWidth: '400px', width: '100%' },
           header: {
-            backgroundColor: '#f5f5f5',
+            backgroundColor: '#fffff',
             padding: '1rem',
             borderBottom: '1px solid #ddd',
           },
+          body: {
+            overflowY: 'auto',
+            maxHeight: 'calc(100vh - 120px)',
+            paddingBottom: '100px', // espaço para o rodapé fixo
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#888 #e0e0e0',
+          },
         }}
       >
-        <form>
+        <form id="filterForm" onSubmit={handleApplyFilters}>
           <Stack spacing="md">
-            <TextInput label="Dono" placeholder="Nome do dono" />
-            <TextInput label="Responsável" placeholder="Nome do responsável" />
-            <Select
-              label="Status"
-              placeholder="Selecione..."
+            <MultiSelect
+              label="Campos Vazios"
+              placeholder="Selecione as colunas"
               data={[
-                { value: 'todos', label: 'Todos' },
-                { value: 'ativo', label: 'Ativo' },
-                { value: 'inativo', label: 'Inativo' },
+                { value: 'nome', label: 'Nome' },
+                { value: 'cargo', label: 'Cargo' },
+                { value: 'telefone', label: 'Telefone' },
+                { value: 'dataCriacao', label: 'Data de Criação' },
+                { value: 'empresa', label: 'Empresa' },
               ]}
+              value={filterEmptyFields}
+              onChange={setFilterEmptyFields}
+            />
+            <TextInput
+              label="Filtrar por Nome"
+              placeholder="Digite o nome"
+              value={filterName}
+              onChange={(e) => setFilterName(e.currentTarget.value)}
+            />
+            <TextInput
+              label="Filtrar por Cargo"
+              placeholder="Digite o cargo"
+              value={filterCargo}
+              onChange={(e) => setFilterCargo(e.currentTarget.value)}
+            />
+            <div>
+              <label
+                style={{
+                  fontWeight: 500,
+                  marginBottom: 4,
+                  display: 'block',
+                }}
+              >
+                Filtrar por Telefone
+              </label>
+              {filterPhones.map((phone, index) => (
+                <TextInput
+                  key={index}
+                  placeholder="Digite o telefone"
+                  value={phone}
+                  onChange={(e) => handleFilterPhoneChange(index, e.currentTarget.value)}
+                  style={{ marginBottom: 8 }}
+                />
+              ))}
+              <Button variant="outline" mt={4} onClick={handleAddFilterPhone} compact>
+                + Adicionar Telefone
+              </Button>
+            </div>
+            <TextInput
+              label="Data de Criação"
+              placeholder="Selecione a data"
+              type="date"
+              value={filterCreationDate}
+              onChange={(e) => setFilterCreationDate(e.currentTarget.value)}
             />
             <Select
-              label="Funil"
-              placeholder="Selecione..."
-              data={[
-                { value: 'padrao', label: 'Funil Padrão' },
-                { value: 'categoria1', label: 'Categoria 1' },
-                { value: 'categoria2', label: 'Categoria 2' },
-                { value: 'categoria3', label: 'Categoria 3' },
-              ]}
+              label="Empresa"
+              placeholder="Selecione a empresa"
+              searchable
+              data={companies.map((comp) => ({
+                value: comp.id,
+                label: comp.name,
+              }))}
+              value={filterCompany}
+              onChange={(value) => setFilterCompany(value || '')}
             />
-            <Select
-              label="Ordenar por"
-              placeholder="Selecione..."
-              data={[
-                { value: 'a-z', label: 'A-Z' },
-                { value: 'z-a', label: 'Z-A' },
-                { value: 'recentes', label: 'Mais Recentes' },
-                { value: 'antigos', label: 'Mais Antigos' },
-              ]}
-            />
-            <TextInput label="Nome" placeholder="Nome do contato" />
-            <TextInput label="Empresa" placeholder="Nome da empresa" />
-            <TextInput label="Data de Criação" type="date" />
           </Stack>
-          <Group position="apart" mt="xl">
-            <Button variant="outline" onClick={() => setIsFilterModalOpen(false)}>
-              Cancelar
-            </Button>
-            <Button type="submit">Aplicar Filtros</Button>
-          </Group>
         </form>
+        {/* Rodapé fixo no modal de filtragem */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#fff',
+            padding: '16px',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: '8px',
+            borderTop: '1px solid #ddd',
+          }}
+        >
+          <Button variant="outline" onClick={() => setIsFilterModalOpen(false)}>
+            Cancelar
+          </Button>
+          <Button className="btn btn-primary" type="submit" form="filterForm">
+            Aplicar Filtro
+          </Button>
+        </div>
       </Drawer>
 
       {/* Tabela de contatos com skeleton enquanto carrega */}
@@ -393,26 +500,31 @@ const Contatos = () => {
         )}
       </div>
 
-      {/* Modal para cadastro de novo contato com o layout atualizado */}
+      {/* Modal para cadastro de novo contato (mantém o layout atualizado) */}
       <Drawer
         opened={isNewContactModalOpen}
         onClose={() => setIsNewContactModalOpen(false)}
         title={<h2 style={{ margin: 0 }}>Cadastrar Novo Contato</h2>}
         padding="xl"
-        size="md"
+        size="lg"
         position="right"
         overlayOpacity={0.55}
-        overlayBlur={3}
+        overlayBlur={0}
         styles={{
-          drawer: { maxWidth: '400px', width: '100%' },
+          drawer: { maxWidth: '600px', width: '100%' },
           header: {
-            backgroundColor: '#f5f5f5',
+            backgroundColor: '#fffff',
             padding: '1rem',
             borderBottom: '1px solid #ddd',
           },
         }}
       >
-        <form onSubmit={handleNewContactSubmit}>
+        {/* O form recebe um padding inferior para dar espaço ao footer fixo */}
+        <form
+          id="newContactForm"
+          onSubmit={handleNewContactSubmit}
+          style={{ position: 'relative', paddingBottom: '80px' }}
+        >
           <Stack spacing="md">
             <TextInput
               label="Nome"
@@ -430,11 +542,22 @@ const Contatos = () => {
 
             {/* Campos de Telefone */}
             <div>
-              <label style={{ fontWeight: 500, marginBottom: 4, display: 'block' }}>
+              <label
+                style={{
+                  fontWeight: 500,
+                  marginBottom: 4,
+                  display: 'block',
+                }}
+              >
                 Telefone(s)
               </label>
               {phones.map((phone, index) => (
-                <Group key={index} noWrap align="flex-end" style={{ marginBottom: 8 }}>
+                <Group
+                  key={index}
+                  noWrap
+                  align="flex-end"
+                  style={{ marginBottom: 8 }}
+                >
                   <Select
                     data={[
                       { value: 'celular', label: 'Celular' },
@@ -443,26 +566,30 @@ const Contatos = () => {
                     ]}
                     placeholder="Tipo"
                     value={phone.type}
-                    onChange={(value) => handlePhoneChange(index, 'type', value || '')}
-                    // Ícone simples com emoji
-                    icon={<span role="img" aria-label="phone">📞</span>}
+                    onChange={(value) =>
+                      handlePhoneChange(index, 'type', value || '')
+                    }
+                    icon={getPhoneIcon(phone.type)}
                     style={{ width: '30%' }}
                     required
                   />
                   <TextInput
                     placeholder="(99) 99999-9999"
                     value={phone.number}
-                    onChange={(e) => handlePhoneChange(index, 'number', e.currentTarget.value)}
-                    // Adiciona um pattern simples para validação (opcional)
+                    onChange={(e) =>
+                      handlePhoneChange(index, 'number', e.currentTarget.value)
+                    }
                     pattern="\\(\\d{2}\\) \\d{5}-\\d{4}"
                     style={{ width: '70%' }}
                     required
                   />
                 </Group>
               ))}
-              <Button variant="outline" mt={4} onClick={handleAddPhone} compact>
-                + Adicionar Telefone
-              </Button>
+              {phones.length < 3 && (
+                <Button variant="outline" mt={4} onClick={handleAddPhone} compact>
+                  + Adicionar Telefone
+                </Button>
+              )}
             </div>
 
             <TextInput
@@ -486,12 +613,24 @@ const Contatos = () => {
               required
             />
           </Stack>
-          <Group position="apart" mt="xl">
+
+          {/* Botões fixos no canto inferior direito */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 16,
+              right: 16,
+              display: 'flex',
+              gap: '8px',
+            }}
+          >
             <Button variant="outline" onClick={() => setIsNewContactModalOpen(false)}>
               Cancelar
             </Button>
-            <Button type="submit">Cadastrar</Button>
-          </Group>
+            <Button className="btn btn-primary" type="submit">
+              Criar Contato
+            </Button>
+          </div>
         </form>
       </Drawer>
     </div>
